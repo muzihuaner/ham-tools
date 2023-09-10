@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>快点HAM工具箱-欢哥科技</title>
+    <meta name="description" content="快点HAM工具箱是一个在Web上为业余无线电爱好者提供服务的工具集。" />
+    <meta name="keywords" content="在线工具,无线电,业余无线电,HAM,梅登黑德网格定位系统,QRZ,中继查询">
+    <!-- Bootstrap CSS -->
+    <link href="https://jsd.onmicrosoft.cn/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- jQuery library -->
+    <script src="https://cdnjs.loli.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://jsd.onmicrosoft.cn/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+<link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+        <symbol id="check" viewBox="0 0 16 16">
+            <title>Check</title>
+            <path
+                d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z" />
+        </symbol>
+    </svg>
+
+    <div class="container py-3">
+        <header>
+            <div class="d-flex flex-column flex-md-row align-items-center pb-3 mb-4 border-bottom">
+                <a href="/" class="d-flex align-items-center text-dark text-decoration-none">
+                    <h2>快点HAM工具箱-Hello，CQ</h2>
+                </a>
+
+                <nav class="d-inline-flex mt-2 mt-md-0 ms-md-auto">
+                    <a class="me-3 py-2 text-dark text-decoration-none" href="#">首页</a>
+                    <li class="nav-item dropdown me-3 py-2" style="list-style: none;">
+                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
+                            aria-expanded="false">知识</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="https://zh.wikipedia.org/wiki/%E4%B8%9A%E4%BD%99%E6%97%A0%E7%BA%BF%E7%94%B5">Wiki</a></li>
+                            <li><a class="dropdown-item" href="https://www.yuque.com/ham/base">无线电基础</a></li>
+                            <li><a class="dropdown-item" href="map.html">CQ图表</a></li>
+                            <li><a class="dropdown-item" href="https://search.bilibili.com/all?keyword=%E4%B8%9A%E4%BD%99%E6%97%A0%E7%BA%BF%E7%94%B5">相关视频</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="https://blog.aoaoao.me/p/amateur-satellite/">业余无线电卫星通联指南</a></li>
+                            <li><a class="dropdown-item" href="https://huangenet.lanzoub.com/i3hlV17yi3rg">业余无线电通信（第五版）</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown me-3 py-2" style="list-style: none;">
+                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
+                            aria-expanded="false">工具</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="http://sjzham.cn/grid/">梅登黑德网格定位</a></li>
+                            <li><a class="dropdown-item" href="http://weixin.cqcqcq.cn/">中继查询</a></li>
+                            <li><a class="dropdown-item" href="https://www.cqid.cn/">模拟考试</a></li>
+                            <li><a class="dropdown-item" href="http://82.157.138.16:8091/CRAC/crac/index.html">业余无线电台操作技术能力验证及信息管理系统</a></li>
+                            <li><a class="dropdown-item" href="https://lcwo.net/zh/welcome">CW练习</a></li>
+                            <li><a class="dropdown-item" href="http://amsat.org.ar/pass.htm">卫星追踪</a></li>
+                          
+                            <li><a class="dropdown-item" href="sun.html">传播预测</a></li>
+                            <li><a class="dropdown-item" href="https://www.receiverbook.de/map">SDR地图</a></li>
+                            <li><a class="dropdown-item" href="https://aprs.tv/">APRS地图</a></li>
+                            <li><a class="dropdown-item" href="https://www.heavens-above.com/AmateurSats.aspx?lat=0&lng=0&loc=Unspecified&alt=0&tz=UCT">业余无线电卫星</a></li>
+                            <li><a class="dropdown-item" href="https://noaa.quickso.cn/">NOAA解码</a></li>
+                            <li><a class="dropdown-item" href="https://muzihuaner.github.io/Morse-Code-Translation/">CW翻译</a></li>
+                        </ul>
+                    </li>
+
+                    <a class="me-3 py-2 text-dark text-decoration-none" href="http://yc-yjwp.ysepan.com/">软件库</a>
+
+                </nav>
+            </div>
+
+            <!-- <div class="pricing-header p-3 pb-md-4 mx-auto text-center">
+                <h1 class="display-4 fw-normal">Pricing</h1>
+                <p class="fs-5 text-muted">Quickly build an effective pricing table for your potential customers with
+                    this Bootstrap example. It’s built with default Bootstrap components and utilities with little
+                    customization.</p>
+            </div> -->
+        </header>
+
+        <main>
+
+            <div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center bg-light banner">
+                <div class="col-md-5 p-lg-5 mx-auto my-5">
+                    <h1 class="display-4 font-weight-normal">快点HAM工具箱-Hello，CQ</h1>
+                    <p class="lead font-weight-normal">用电波传递通联全球！</p>
+                </div>
+                <div class="product-device shadow-sm d-none d-md-block"></div>
+                <div class="product-device product-device-2 shadow-sm d-none d-md-block"></div>
+            </div>
+            <main class="px-3 text-center">
+
+                
+                <div class="card">
+                    <div class="card-body">
+                        <div id="beijingTime" class="time"></div>
+                        <div id="utcTime" class="time"></div>
+                    </div>
+                  </div>
+
+                <script>
+                    function displayTime() {
+                        var date = new Date();
+                  
+                        // 获取北京时间
+                        var beijingTime = date.toLocaleString("en-US", { timeZone: "Asia/Shanghai", hour12: false });
+                  
+                        // 获取UTC时间
+                        var utcTime = date.toISOString().slice(0, 19).replace("T", " ");
+                  
+                        // 显示时间
+                        document.getElementById("beijingTime").textContent = "北京时间: " + beijingTime;
+                        document.getElementById("utcTime").textContent = "UTC时间: " + utcTime;
+                      }
+                  
+                      // 每秒更新时间
+                      setInterval(displayTime, 1000);
+                </script>
+                
+              </main>
+
+    
+    </main>
+
+    <footer class="pt-4 my-md-5 pt-md-5 border-top">
+        <div class="row">
+            <div class="col-12 col-md">
+                <h3 class="mb-2">快点HAM工具箱-Hello，CQ</h3>
+                <small class="d-block mb-3 text-muted"><p>电子邮件:muzihuaner@hotmail.com</p></small>
+            </div>
+            <div class="col-6 col-md">
+                <h5>相关链接</h5>
+                <ul class="list-unstyled text-small">
+                    <li class="mb-1"><a class="link-secondary text-decoration-none" href="https://www.iaru.org/">国际业余无线电联盟</a></li>
+                    <li class="mb-1"><a class="link-secondary text-decoration-none" href="http://www.iaru-r3.org/">国际业余无线电联盟三区</a></li>
+                    <li class="mb-1"><a class="link-secondary text-decoration-none" href="http://www.miit.gov.cn/">中华人民共和国工业和信息化部</a></li>
+                    <li class="mb-1"><a class="link-secondary text-decoration-none" href="http://www.rachina.org.cn/">中国无线电协会</a></li>
+                    <li class="mb-1"><a class="link-secondary text-decoration-none" href="http://www.crac.org.cn/">中国无线电协会业余无线电分会</a></li>
+                </ul>
+            </div>
+            <div class="col-6 col-md">
+                <h5>友情链接</h5>
+                <ul class="list-unstyled text-small">
+                    <li class="mb-1"><a class="link-secondary text-decoration-none" href="https://www.qrz.com/">QRZ</a></li>
+                    <li class="mb-1"><a class="link-secondary text-decoration-none" href="http://www.qrz.cn/home">QRZ中国</a></li>
+                    <li class="mb-1"><a class="link-secondary text-decoration-none" href="https://forum.hamcq.cn/">HamCQ 社区</a></li>
+                    <li class="mb-1"><a class="link-secondary text-decoration-none" href="http://bbs.cqcqcq.com/">中国业余无线电论坛</a></li>
+                    <li class="mb-1"><a class="link-secondary text-decoration-none" href="https://www.hellocq.net/forum/">哈罗CQ火腿社区</a></li>
+                </ul>
+            </div>
+            <div class="col-6 col-md">
+                <h5>关于</h5>
+                <ul class="list-unstyled text-small">
+                    <li class="mb-1"><a class="link-secondary text-decoration-none" href="https://huangetech.github.io">欢哥科技</a></li>
+                    <li class="mb-1"><a class="link-secondary text-decoration-none" href="https://shssedu.ac.cn">SHSSEDU</a></li>
+                    <li class="mb-1"><a class="link-secondary text-decoration-none" href="https://github.com/muzihuaner/ham-tools">Github</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+    </div>
+</div>
+
+
+</body>
+
+</html>

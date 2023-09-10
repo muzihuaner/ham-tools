@@ -1,0 +1,10 @@
+.banner {
+    background: url(../img/banner.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.time {
+    font-size: 24px;
+    font-weight: bold;
+}
