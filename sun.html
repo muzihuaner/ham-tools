@@ -4,26 +4,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>快点HAM工具箱-传播预测-欢哥科技</title>
-    <meta name="description" content="快点HAM工具箱是一个在Web上为业余无线电爱好者提供服务的工具集。" />
+    <title>快点 HAM 工具箱 - 传播预测 - 欢哥科技</title>
+    <meta name="description" content="快点 HAM 工具箱是一个在 Web 上为业余无线电爱好者提供服务的工具集。">
     <meta name="keywords" content="在线工具,无线电,业余无线电,HAM,梅登黑德网格定位系统,QRZ,中继查询">
     <!-- Bootstrap CSS -->
     <link href="https://jsd.onmicrosoft.cn/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- jQuery library -->
-    <script src="https://cdnjs.loli.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <!-- Bootstrap JS -->
-    <script src="https://jsd.onmicrosoft.cn/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <style>
         body {
             background-color: #333;
             color: aliceblue;
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+       .jumbotron {
+            background-color: #444;
+            padding: 2rem;
+        }
+
+        p {
+            font-size: 1.1rem;
+            line-height: 1.5;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
         }
     </style>
 </head>
 
 <body>
-
-
 
     <div class="container">
         <div class="jumbotron mt-3 text-center">
@@ -35,118 +51,69 @@
                 <script>
                     function displayTime() {
                         var date = new Date();
-                  
+
                         // 获取北京时间
                         var beijingTime = date.toLocaleString("en-US", { timeZone: "Asia/Shanghai", hour12: false });
-                  
-                        // 获取UTC时间
+
+                        // 获取 UTC 时间
                         var utcTime = date.toISOString().slice(0, 19).replace("T", " ");
-                  
+
                         // 显示时间
                         document.getElementById("beijingTime").textContent = "北京时间: " + beijingTime;
-                        document.getElementById("utcTime").textContent = "UTC时间: " + utcTime;
-                      }
-                  
-                      // 每秒更新时间
-                      setInterval(displayTime, 1000);
+                        document.getElementById("utcTime").textContent = "UTC 时间: " + utcTime;
+                    }
+
+                    // 每秒更新时间
+                    setInterval(displayTime, 1000);
                 </script>
                 <div class="maincontent clearfix">
                     <p>
-                        <strong><span
-                                style="font-size:14px;font-family:FangSong_GB2312;">本页是为您精心准备的各波段传播开通情况及</span></strong><strong><span
-                                style="font-size:14px;font-family:FangSong_GB2312;">实时太阳图片，可以用于预测短波通信传播，有助于您DX的成功。</span></strong>
+                        <strong>本页为您精心准备了各波段传播开通情况及实时太阳图片，可用于预测短波通信传播，助您 DX 成功。</strong>
                     </p>
-                    UV传播
+                    <h2>UV 传播</h2>
                     <p>
-                        <a href="https://www.dxinfocentre.com/tropo_eas.html"><img height="360px"
-                                src="https://www.dxinfocentre.com/tr_map/fcst/eas006.png"></a>
+                        <a href="https://www.dxinfocentre.com/tropo_eas.html"><img height="360px" src="https://www.dxinfocentre.com/tr_map/fcst/eas006.png"></a>
                     </p>
-                    短波传播
+                    <h2>短波传播</h2>
                     <p>
-                        <a href="https://www.hamqsl.com/solar.html"><img
-                                src="https://www.hamqsl.com/solar101pic.php"></a>
+                        <a href="https://www.hamqsl.com/solar.html"><img src="https://www.hamqsl.com/solar101pic.php"></a>
                     </p>
+                    <h2>空间环境</h2>
                     <p>
-                        <br>
-                    </p>
-                    空间环境
-                    <p>
-                        <br>
                         <a href="https://www.hamqsl.com/solar.html"><img src="https://www.hamqsl.com/solarmap.php"></a>
                     </p>
-
-                    <br>
-
-                    实时太阳
+                    <h2>实时太阳</h2>
                     <p>
                         <img src="https://sohowww.nascom.nasa.gov/data/realtime/eit_304/512/latest.jpg" alt="">
-                    </p>
-                    <p>
-                        <br>
                     </p>
                     <p>
                         <img src="https://sohowww.nascom.nasa.gov/data/realtime/eit_284/512/latest.jpg" alt="">
                     </p>
                     <p>
-                        <br>
-                    </p>
-                    <p>
                         <img src="https://sohowww.nascom.nasa.gov/data/realtime/eit_171/512/latest.jpg" alt="">
-                    </p>
-                    <p>
-                        <br>
                     </p>
                     <p>
                         <img src="https://sohowww.nascom.nasa.gov/data/realtime/eit_195/512/latest.jpg" alt="">
                     </p>
                     <p>
-                        <br>
-                    </p>
-                    <p>
-                        <br>
-                    </p>
-                    <p>
                         <img src="https://sohowww.nascom.nasa.gov/data/realtime/c2/512/latest.jpg" alt="">
                     </p>
                     <p>
-                        <br>
-                    </p>
-                    <p>
-                        <br>
-                    </p>
-                    <p>
-
                         <img src="https://sohowww.nascom.nasa.gov/data/realtime/c3/512/latest.jpg" alt="">
                     </p>
-                    <p>电离层TEC现报
-                        <br>
-                        <img src="img/TECMAPHOUR.jpg" alt="">
-                    </p>
+                    <h2>电离层 TEC 现报</h2>
                     <p>
-                        <br>
-                    </p>
-                    <p>
-                        <br>
-                    </p>
-                    <p>
-                        <br>
-                    </p>
-                    <p>
-                        <br>
-                    </p>
-                    <p>
-                        <br>
+                        <img src="http://www.sepc.ac.cn/uploads/share1//ionosphere/GNSS/products/TECMap_15m/2024/178/tec_202406260530.png" alt="">
                     </p>
                 </div>
-
-
             </div>
-            <!--content end-->
-
         </div>
     </div>
 
-    </div>
+    <!-- jQuery library -->
+    <script src="https://cdnjs.loli.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://jsd.onmicrosoft.cn/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
