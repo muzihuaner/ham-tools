@@ -11,105 +11,170 @@
     <link href="https://cdn.jsdmirror.com/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
-            background-color: #333;
-            color: aliceblue;
-            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #232526 0%, #414345 100%);
+            color: #e9ecef;
+            font-family: 'Segoe UI', Arial, sans-serif;
         }
 
-        h1 {
-            font-size: 2rem;
-            font-weight: bold;
-            margin-bottom: 1rem;
+        h1,
+        h2,
+        .h5 {
+            color: #ffd700;
         }
 
-       .jumbotron {
-            background-color: #444;
-            padding: 2rem;
+        .jumbotron {
+            background: rgba(44, 62, 80, 0.95);
+            padding: 2.5rem 2rem 2rem 2rem;
+            border-radius: 1.5rem;
         }
 
-        p {
-            font-size: 1.1rem;
-            line-height: 1.5;
+        .card {
+            background: rgba(52, 58, 64, 0.95);
+            border: none;
         }
 
-        img {
+        .card-body {
+            padding: 1.5rem 1rem;
+        }
+
+        .navbar {
+            margin-bottom: 0.5rem;
+        }
+
+        .maincontent img {
             max-width: 100%;
             height: auto;
+            margin-bottom: 0.5rem;
+        }
+
+        .shadow-sm {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12) !important;
+        }
+
+        .rounded-4 {
+            border-radius: 1.5rem !important;
+        }
+
+        .lead {
+            color: #fffbe7;
+        }
+
+        @media (max-width: 768px) {
+            .row-cols-md-3>.col {
+                flex: 0 0 100%;
+                max-width: 100%;
+            }
         }
     </style>
 </head>
 
 <body>
-
-    <div class="container">
-        <div class="jumbotron mt-3 text-center">
-            <h1>传播预测</h1>
+    <!-- 顶部导航栏 -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="#">快点 HAM 工具箱</a>
+            <span class="navbar-text ms-auto">传播预测</span>
+        </div>
+    </nav>
+    <div class="container py-4">
+        <div class="jumbotron mt-3 text-center shadow rounded-4 bg-secondary bg-gradient">
+            <h1 class="mb-4">传播预测</h1>
             <div class="content">
-                <div id="beijingTime"></div>
-                <div id="utcTime"></div>
-
+                <div class="d-flex justify-content-center gap-4 mb-3">
+                    <div id="beijingTime" class="px-3 py-2 rounded bg-dark text-warning fw-bold"></div>
+                    <div id="utcTime" class="px-3 py-2 rounded bg-dark text-info fw-bold"></div>
+                </div>
                 <script>
+                    function pad(num) {
+                        return num < 10 ? '0' + num : num;
+                    }
+                    function formatDate(date) {
+                        return date.getFullYear() + '-' +
+                            pad(date.getMonth() + 1) + '-' +
+                            pad(date.getDate()) + ' ' +
+                            pad(date.getHours()) + ':' +
+                            pad(date.getMinutes()) + ':' +
+                            pad(date.getSeconds());
+                    }
                     function displayTime() {
-                        var date = new Date();
-
-                        // 获取北京时间
-                        var beijingTime = date.toLocaleString("en-US", { timeZone: "Asia/Shanghai", hour12: false });
-
-                        // 获取 UTC 时间
-                        var utcTime = date.toISOString().slice(0, 19).replace("T", " ");
-
-                        // 显示时间
+                        var now = new Date();
+                        // 北京时间
+                        var bjDate = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Shanghai' }));
+                        var beijingTime = formatDate(bjDate);
+                        // UTC 时间
+                        var utcDate = new Date(now.getTime() + now.getTimezoneOffset() * 60000);
+                        var utcTime = formatDate(utcDate);
                         document.getElementById("beijingTime").textContent = "北京时间: " + beijingTime;
                         document.getElementById("utcTime").textContent = "UTC 时间: " + utcTime;
                     }
-
-                    // 每秒更新时间
                     setInterval(displayTime, 1000);
                 </script>
                 <div class="maincontent clearfix">
-                    <p>
+                    <p class="lead mb-4">
                         <strong>本页为您精心准备了各波段传播开通情况及实时太阳图片，可用于预测短波通信传播，助您 DX 成功。</strong>
                     </p>
-                    <h2>UV 传播</h2>
-                    <p>
-                        <a href="https://www.dxinfocentre.com/tropo_eas.html"><img height="360px" src="https://www.dxinfocentre.com/tr_map/fcst/eas006.png"></a>
-                    </p>
-                    <h2>短波传播</h2>
-                    <p>
-                        <a href="https://www.hamqsl.com/solar.html"><img src="https://www.hamqsl.com/solar101pic.php"></a>
-                    </p>
-                    <h2>空间环境</h2>
-                    <p>
-                        <a href="https://www.hamqsl.com/solar.html"><img src="https://www.hamqsl.com/solarmap.php"></a>
-                    </p>
-                    <h2>实时太阳</h2>
-                    <p>
-                        <img src="https://sohowww.nascom.nasa.gov/data/realtime/eit_304/512/latest.jpg" alt="">
-                    </p>
-                    <p>
-                        <img src="https://sohowww.nascom.nasa.gov/data/realtime/eit_284/512/latest.jpg" alt="">
-                    </p>
-                    <p>
-                        <img src="https://sohowww.nascom.nasa.gov/data/realtime/eit_171/512/latest.jpg" alt="">
-                    </p>
-                    <p>
-                        <img src="https://sohowww.nascom.nasa.gov/data/realtime/eit_195/512/latest.jpg" alt="">
-                    </p>
-                    <p>
-                        <img src="https://sohowww.nascom.nasa.gov/data/realtime/c2/512/latest.jpg" alt="">
-                    </p>
-                    <p>
-                        <img src="https://sohowww.nascom.nasa.gov/data/realtime/c3/512/latest.jpg" alt="">
-                    </p>
-                    <h2>电离层 TEC 现报</h2>
-                    <p>
-                        <img src="img/tec_202406260530.png" alt="">
-                    </p>
+                    <div class="card mb-4 shadow-sm">
+                        <div class="card-body">
+                            <h2 class="h5">UV 传播</h2>
+                            <a href="https://www.dxinfocentre.com/tropo_eas.html"><img class="rounded mb-2" height="360px"
+                                    src="https://www.dxinfocentre.com/tr_map/fcst/eas006.png"></a>
+                        </div>
+                    </div>
+                    <div class="row g-4 mb-4">
+                        <div class="col-md-6">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body">
+                                    <h2 class="h5">短波传播</h2>
+                                    <a href="https://www.hamqsl.com/solar.html"><img class="rounded mb-2"
+                                            src="https://www.hamqsl.com/solar101pic.php"></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body">
+                                    <h2 class="h5">空间环境</h2>
+                                    <a href="https://www.hamqsl.com/solar.html"><img class="rounded mb-2"
+                                            src="https://www.hamqsl.com/solarmap.php"></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card mb-4 shadow-sm">
+                        <div class="card-body">
+                            <h2 class="h5 mb-3">实时太阳</h2>
+                            <div class="row row-cols-2 row-cols-md-3 g-3">
+                                <div class="col"><img class="img-fluid rounded shadow-sm"
+                                        src="https://sohowww.nascom.nasa.gov/data/realtime/eit_304/512/latest.jpg"
+                                        alt="eit_304"></div>
+                                <div class="col"><img class="img-fluid rounded shadow-sm"
+                                        src="https://sohowww.nascom.nasa.gov/data/realtime/eit_284/512/latest.jpg"
+                                        alt="eit_284"></div>
+                                <div class="col"><img class="img-fluid rounded shadow-sm"
+                                        src="https://sohowww.nascom.nasa.gov/data/realtime/eit_171/512/latest.jpg"
+                                        alt="eit_171"></div>
+                                <div class="col"><img class="img-fluid rounded shadow-sm"
+                                        src="https://sohowww.nascom.nasa.gov/data/realtime/eit_195/512/latest.jpg"
+                                        alt="eit_195"></div>
+                                <div class="col"><img class="img-fluid rounded shadow-sm"
+                                        src="https://sohowww.nascom.nasa.gov/data/realtime/c2/512/latest.jpg"
+                                        alt="c2"></div>
+                                <div class="col"><img class="img-fluid rounded shadow-sm"
+                                        src="https://sohowww.nascom.nasa.gov/data/realtime/c3/512/latest.jpg"
+                                        alt="c3"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card mb-4 shadow-sm">
+                        <div class="card-body">
+                            <h2 class="h5 mb-3">电离层 TEC 现报</h2>
+                            <img class="rounded shadow-sm" src="img/tec_202406260530.png" alt="TEC">
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
     <!-- jQuery library -->
     <script src="https://cdnjs.loli.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <!-- Bootstrap JS -->

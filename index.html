@@ -107,28 +107,107 @@
                 
                 <div class="card">
                     <div class="card-body">
-                        <div id="beijingTime" class="time"></div>
-                        <div id="utcTime" class="time"></div>
+                        <div id="clockContainer" style="display: flex; flex-direction: row; justify-content: center; gap: 40px;">
+                            <div style="display: flex; flex-direction: column; align-items: center;">
+                                <canvas id="clockCanvasBeijing" width="160" height="160" style="margin-bottom: 10px;"></canvas>
+                                <div id="beijingTime" class="time"></div>
+                                <div style="font-weight:bold;">北京时间</div>
+                            </div>
+                            <div style="display: flex; flex-direction: column; align-items: center;">
+                                <canvas id="clockCanvasUTC" width="160" height="160" style="margin-bottom: 10px;"></canvas>
+                                <div id="utcTime" class="time"></div>
+                                <div style="font-weight:bold;">UTC时间</div>
+                            </div>
+                        </div>
                     </div>
                   </div>
 
                 <script>
+                    function pad(num) {
+                        return num < 10 ? '0' + num : num;
+                    }
+                    function formatDate(date) {
+                        return date.getFullYear() + '-' + pad(date.getMonth() + 1) + '-' + pad(date.getDate()) + ' ' + pad(date.getHours()) + ':' + pad(date.getMinutes()) + ':' + pad(date.getSeconds());
+                    }
                     function displayTime() {
-                        var date = new Date();
-                  
-                        // 获取北京时间
-                        var beijingTime = date.toLocaleString("en-US", { timeZone: "Asia/Shanghai", hour12: false });
-                  
-                        // 获取UTC时间
-                        var utcTime = date.toISOString().slice(0, 19).replace("T", " ");
-                  
-                        // 显示时间
-                        document.getElementById("beijingTime").textContent = "北京时间: " + beijingTime;
-                        document.getElementById("utcTime").textContent = "UTC时间: " + utcTime;
-                      }
-                  
-                      // 每秒更新时间
-                      setInterval(displayTime, 1000);
+                        var now = new Date();
+                        // 北京时间
+                        var beijingDate = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Shanghai' }));
+                        // UTC时间
+                        var utcDate = new Date(now.getTime() + now.getTimezoneOffset() * 60000);
+                        document.getElementById("beijingTime").textContent = formatDate(beijingDate);
+                        document.getElementById("utcTime").textContent = formatDate(utcDate);
+                        drawClock(document.getElementById('clockCanvasBeijing'), beijingDate);
+                        drawClock(document.getElementById('clockCanvasUTC'), utcDate);
+                    }
+                    function drawClock(canvas, date) {
+                        var ctx = canvas.getContext('2d');
+                        var radius = canvas.width / 2;
+                        ctx.clearRect(0, 0, canvas.width, canvas.height);
+                        ctx.save();
+                        ctx.translate(radius, radius);
+                        ctx.beginPath();
+                        ctx.arc(0, 0, radius - 5, 0, 2 * Math.PI);
+                        ctx.fillStyle = '#fff';
+                        ctx.fill();
+                        ctx.lineWidth = 4;
+                        ctx.strokeStyle = '#333';
+                        ctx.stroke();
+                        // 刻度
+                        for (let i = 0; i < 12; i++) {
+                            ctx.save();
+                            ctx.rotate(i * Math.PI / 6);
+                            ctx.beginPath();
+                            ctx.moveTo(0, -radius + 10);
+                            ctx.lineTo(0, -radius + 25);
+                            ctx.lineWidth = 3;
+                            ctx.strokeStyle = '#333';
+                            ctx.stroke();
+                            ctx.restore();
+                        }
+                        // 指针
+                        var hour = date.getHours() % 12;
+                        var minute = date.getMinutes();
+                        var second = date.getSeconds();
+                        // 时针
+                        ctx.save();
+                        ctx.rotate((hour + minute / 60) * Math.PI / 6);
+                        ctx.beginPath();
+                        ctx.moveTo(0, 10);
+                        ctx.lineTo(0, -radius + 50);
+                        ctx.lineWidth = 6;
+                        ctx.strokeStyle = '#333';
+                        ctx.stroke();
+                        ctx.restore();
+                        // 分针
+                        ctx.save();
+                        ctx.rotate((minute + second / 60) * Math.PI / 30);
+                        ctx.beginPath();
+                        ctx.moveTo(0, 15);
+                        ctx.lineTo(0, -radius + 30);
+                        ctx.lineWidth = 4;
+                        ctx.strokeStyle = '#007bff';
+                        ctx.stroke();
+                        ctx.restore();
+                        // 秒针
+                        ctx.save();
+                        ctx.rotate(second * Math.PI / 30);
+                        ctx.beginPath();
+                        ctx.moveTo(0, 20);
+                        ctx.lineTo(0, -radius + 20);
+                        ctx.lineWidth = 2;
+                        ctx.strokeStyle = '#e74c3c';
+                        ctx.stroke();
+                        ctx.restore();
+                        // 圆心
+                        ctx.beginPath();
+                        ctx.arc(0, 0, 6, 0, 2 * Math.PI);
+                        ctx.fillStyle = '#333';
+                        ctx.fill();
+                        ctx.restore();
+                    }
+                    setInterval(displayTime, 1000);
+                    displayTime();
                 </script>
                 
               </main>
