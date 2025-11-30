@@ -1,64 +1,36 @@
-# 快点HAM工具箱-Hello，CQ
+# 🛠️ 快点 HAM 工具箱
 
-![GitHub stars](https://img.shields.io/github/stars/muzihuaner/ham-tools)
-![GitHub forks](https://img.shields.io/github/forks/muzihuaner/ham-tools)
-![GitHub issues](https://img.shields.io/github/issues/muzihuaner/ham-tools)
-![GitHub license](https://img.shields.io/github/license/muzihuaner/ham-tools)
+> 一站式业余无线电工具集合，从传播预测到卫星追踪，助力你的每一次 **CQ**！
 
-## 项目简介
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![GitHub](https://img.shields.io/badge/GitHub-muzihuaner%2Fham--tools-blue)](https://github.com/muzihuaner/ham-tools)
 
-快点HAM工具箱（Hello，CQ）是一个为业余无线电爱好者（HAM）提供在线工具和服务的综合平台。本项目旨在为HAM社区提供便捷的工具集合，帮助爱好者更好地进行无线电通联活动。
+## 📋 项目简介
 
-## 主要功能
+**快点 HAM 工具箱** 是一个为业余无线电（Amateur Radio, HAM）爱好者提供的在线工具集合。该项目旨在为全球的业余无线电爱好者提供便捷、实用的工具，帮助用户进行短波通联、卫星追踪、中继查询等操作。
 
-- 📡 实时时钟显示（北京时间/UTC时间）
-- 🌍 传播预测工具
-  - UV传播预测
-  - 短波传播预测
-  - 空间环境监测
-  - 实时太阳观测
-  - 电离层TEC现报
-- 🗺️ 实用工具集
-  - 业余无线电中继查询
-  - 梅登黑德网格定位
-  - CW练习与翻译
-  - 卫星过境查询
-  - NOAA解码
-  - SDR网页客户端
-  - 短波广播查询
-- 📚 学习资源
-  - 业余无线电基础知识
-  - 在线考试模拟
-  - HAM相关视频
-  - 操作技术指南
+### 🌟 核心特性
 
-## 在线访问
-
-你可以通过以下地址访问快点HAM工具箱：
-[https://ham.quickso.cn](https://ham.quickso.cn)
+- **☀️ 传播预测** - 查看太阳活动和电离层数据，预测短波通联条件
+- **🗺️ 中继地图** - 全国业余无线电中继台的地理位置和详细参数查询
+- **🛰️ 卫星追踪** - 查询业余无线电卫星的过境时间和轨道信息
+- **• — CW 练习** - 在线摩尔斯电码（CW）收听和发送练习工具
+- **📍 梅登黑德网格定位** - 快速转换地理坐标和梅登黑德网格
+- **⏰ 实时世界时钟** - UTC 和北京时间实时显示
+- **📚 知识库集成** - 汇集业余无线电相关的教学资源和技术文档
 
 
 
-## 联系方式
+## 📄 许可证
 
-- 📧 电子邮件：muzihuaner@hotmail.com
-- 🌐 项目主页：[欢哥科技](https://huangetech.github.io)
+本项目采用 [MIT License](LICENSE) 开源许可证。
 
-## 相关链接
+## ⚠️ 免责声明
 
-- [国际业余无线电联盟](https://www.iaru.org/)
-- [中国无线电协会](http://www.rachina.org.cn/)
-- [中国无线电协会业余无线电分会](http://www.crac.org.cn/)
+本网站所含外部链接资源均由第三方提供，本站不承担任何法律责任。使用本工具箱中的任何资源和工具时，请确保遵守当地关于业余无线电的法律法规。
 
-## 贡献指南
 
-欢迎为项目提供贡献！如果你有任何建议或发现bug，请：
+---
 
-1. Fork 本仓库
-2. 创建新的功能分支
-3. 提交你的更改
-4. 发起 Pull Request
 
-## 开源协议
-
-本项目采用 MIT 协议开源，详情请参阅 [LICENSE](LICENSE) 文件。
+如有任何问题或建议，欢迎通过 GitHub Issues 与我们联系！
