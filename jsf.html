@@ -1,0 +1,1403 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>字母解释法 - 快点HAM工具箱</title>
+    <meta name="description" content="业余无线电英文字母、数字和符号的标准发音参考。">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap');
+
+        * {
+            font-family: 'Noto Sans SC', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f7;
+            scroll-behavior: smooth;
+        }
+
+        main {
+            min-height: 100vh;
+            padding: 2rem 1rem;
+        }
+
+        .main-wrapper {
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        /* 警告框 */
+        .warning-text {
+            background: linear-gradient(135deg, #fff3cd 0%, #fff8e1 100%);
+            border-left: 4px solid #ffc107;
+            padding: 1rem 1.5rem;
+            border-radius: 0.8rem;
+            margin-bottom: 2.5rem;
+            color: #856404;
+            font-size: 0.95rem;
+        }
+
+        /* 模块容器 */
+        .module-container {
+            margin-bottom: 3rem;
+        }
+
+        .module-container h2 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #000000;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #e5e5e7;
+        }
+
+        /* 网格容器 */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 1.5rem;
+        }
+
+        /* 发音卡片 */
+        .pronunciation-card {
+            background: white;
+            border: 1px solid #e5e5e7;
+            border-radius: 1.2rem;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: slideUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            opacity: 0;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .pronunciation-card:hover {
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+            border-color: #0071e3;
+            transform: translateY(-4px);
+        }
+
+        /* 卡片头部 */
+        .card-header {
+            background: linear-gradient(135deg, #0071e3 0%, #0056b3 100%);
+            color: white;
+            font-size: 2rem;
+            font-weight: 700;
+            padding: 1.5rem;
+            text-align: center;
+            letter-spacing: 0.05em;
+        }
+
+        /* 卡片主体 */
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        /* 发音项 */
+        .pronunciation-item {
+            margin-bottom: 1.5rem;
+        }
+
+        .pronunciation-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .pronunciation-item.alternative {
+            padding-top: 1rem;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        /* 发音类型标签 */
+        .pronunciation-type {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #0071e3;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .pronunciation-type i {
+            font-size: 0.9rem;
+        }
+
+        /* 单词行 */
+        .word-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .word {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #000000;
+        }
+
+        .phonetic {
+            font-size: 0.85rem;
+            color: #999999;
+            font-family: 'Courier New', monospace;
+            font-style: italic;
+        }
+
+        /* 播放按钮 */
+        .play-btn {
+            flex-shrink: 0;
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #0071e3 0%, #0056b3 100%);
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 113, 227, 0.3);
+        }
+
+        .play-btn:hover:not(:disabled) {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(0, 113, 227, 0.5);
+        }
+
+        .play-btn:active:not(:disabled) {
+            transform: scale(0.95);
+        }
+
+        .play-btn:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        /* 使用说明模块 */
+        .instructions-module {
+            background: linear-gradient(135deg, #f0f7ff 0%, #ffffff 100%);
+            border: 1px solid #e0ecff;
+            border-radius: 1.2rem;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+
+        .instructions-content {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .instruction-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            line-height: 1.6;
+            color: #333333;
+            font-size: 0.95rem;
+        }
+
+        .highlight {
+            display: inline-block;
+            background: #0071e3;
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 0.4rem;
+            font-weight: 600;
+            white-space: nowrap;
+            font-size: 0.85rem;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .grid-container {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                gap: 1rem;
+            }
+
+            .module-container h2 {
+                font-size: 1.4rem;
+            }
+
+            .card-header {
+                font-size: 1.5rem;
+                padding: 1.2rem;
+            }
+
+            .card-body {
+                padding: 1.2rem;
+            }
+
+            main {
+                padding: 1.5rem 0.75rem;
+            }
+
+            .instructions-module {
+                padding: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
+
+            .pronunciation-card {
+                animation-delay: 0s !important;
+            }
+
+            .warning-text {
+                font-size: 0.9rem;
+                padding: 0.8rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="main">
+        <div class="main-wrapper">
+
+            <!-- 注意事项 -->
+            <div class="warning-text">
+                ⚠️ 注意：本工具仅用于学习和参考，发音功能在移动端可能无法正常使用，建议在PC端使用。
+            </div>
+
+            <!-- 英文字母标准发音模块 -->
+            <section class="module-container">
+                <h2>📝 英文字母标准发音</h2>
+                <div class="grid-container" id="letters-container">
+                    <!-- 字母卡片 A-Z -->
+                    <div class="pronunciation-card" style="animation-delay: 0s;">
+                        <div class="card-header">A</div>
+                        <div class="card-body">
+                            <div class="pronunciation-item">
+                                <div class="pronunciation-type">
+                                    <i class="fas fa-microphone"></i> 标准发音
+                                </div>
+                                <div class="word-row">
+                                    <div style="flex: 1;">
+                                        <div class="word">Alfa</div>
+                                        <div class="phonetic">/ˈælfə/</div>
+                                    </div>
+                                    <button class="play-btn" data-word="Alfa" title="播放发音">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="pronunciation-item alternative">
+                                <div class="pronunciation-type">
+                                    <i class="fas fa-headphones"></i> 替代发音
+                                </div>
+                                <div class="word-row">
+                                    <div style="flex: 1;">
+                                        <div class="word">America</div>
+                                        <div class="phonetic">/əˈmerɪkə/</div>
+                                    </div>
+                                    <button class="play-btn" data-word="America" title="播放发音">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pronunciation-card" style="animation-delay: 0.05s;">
+                        <div class="card-header">B</div>
+                        <div class="card-body">
+                            <div class="pronunciation-item">
+                                <div class="pronunciation-type">
+                                    <i class="fas fa-microphone"></i> 标准发音
+                                </div>
+                                <div class="word-row">
+                                    <div style="flex: 1;">
+                                        <div class="word">Bravo</div>
+                                        <div class="phonetic">/ˈbrɑːvoʊ/</div>
+                                    </div>
+                                    <button class="play-btn" data-word="Bravo" title="播放发音">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="pronunciation-item alternative">
+                                <div class="pronunciation-type">
+                                    <i class="fas fa-headphones"></i> 替代发音
+                                </div>
+                                <div class="word-row">
+                                    <div style="flex: 1;">
+                                        <div class="word">Boston</div>
+                                        <div class="phonetic">/ˈbɑstən/</div>
+                                    </div>
+                                    <button class="play-btn" data-word="Boston" title="播放发音">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pronunciation-card" style="animation-delay: 0.1s;">
+                        <div class="card-header">C</div>
+                        <div class="card-body">
+                            <div class="pronunciation-item">
+                                <div class="pronunciation-type">
+                                    <i class="fas fa-microphone"></i> 标准发音
+                                </div>
+                                <div class="word-row">
+                                    <div style="flex: 1;">
+                                        <div class="word">Charlie</div>
+                                        <div class="phonetic">/ˈtʃɑːrli/</div>
+                                    </div>
+                                    <button class="play-btn" data-word="Charlie" title="播放发音">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="pronunciation-item alternative">
+                                <div class="pronunciation-type">
+                                    <i class="fas fa-headphones"></i> 替代发音
+                                </div>
+                                <div class="word-row">
+                                    <div style="flex: 1;">
+                                        <div class="word">Canada</div>
+                                        <div class="phonetic">/ˈkænədə/</div>
+                                    </div>
+                                    <button class="play-btn" data-word="Canada" title="播放发音">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pronunciation-card" style="animation-delay: 0.15s;">
+                        <div class="card-header">D</div>
+                        <div class="card-body">
+                            <div class="pronunciation-item">
+                                <div class="pronunciation-type">
+                                    <i class="fas fa-microphone"></i> 标准发音
+                                </div>
+                                <div class="word-row">
+                                    <div style="flex: 1;">
+                                        <div class="word">Delta</div>
+                                        <div class="phonetic">/ˈdeltə/</div>
+                                    </div>
+                                    <button class="play-btn" data-word="Delta" title="播放发音">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="pronunciation-item alternative">
+                                <div class="pronunciation-type">
+                                    <i class="fas fa-headphones"></i> 替代发音
+                                </div>
+                                <div class="word-row">
+                                    <div style="flex: 1;">
+                                        <div class="word">Denmark</div>
+                                        <div class="phonetic">/ˈdænmɑːk/</div>
+                                    </div>
+                                    <button class="play-btn" data-word="Denmark" title="播放发音">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pronunciation-card" style="animation-delay: 0.2s;">
+                        <div class="card-header">E</div>
+                        <div class="card-body">
+                            <div class="pronunciation-item">
+                                <div class="pronunciation-type">
+                                    <i class="fas fa-microphone"></i> 标准发音
+                                </div>
+                                <div class="word-row">
+                                    <div style="flex: 1;">
+                                        <div class="word">Echo</div>
+                                        <div class="phonetic">/ˈekoʊ/</div>
+                                    </div>
+                                    <button class="play-btn" data-word="Echo" title="播放发音">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="pronunciation-item alternative">
+                                <div class="pronunciation-type">
+                                    <i class="fas fa-headphones"></i> 替代发音
+                                </div>
+                                <div class="word-row">
+                                    <div style="flex: 1;">
+                                        <div class="word">England</div>
+                                        <div class="phonetic">/ˈɪŋɡlənd/</div>
+                                    </div>
+                                    <button class="play-btn" data-word="England" title="播放发音">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pronunciation-card" style="animation-delay: 0.25s;">
+                        <div class="card-header">F</div>
+                        <div class="card-body">
+                            <div class="pronunciation-item">
+                                <div class="pronunciation-type">
+                                    <i class="fas fa-microphone"></i> 标准发音
+                                </div>
+                                <div class="word-row">
+                                    <div style="flex: 1;">
+                                        <div class="word">Foxtrot</div>
+                                        <div class="phonetic">/ˈfɑːkstrɑːt/</div>
+                                    </div>
+                                    <button class="play-btn" data-word="Foxtrot" title="播放发音">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="pronunciation-item alternative">
+                                <div class="pronunciation-type">
+                                    <i class="fas fa-headphones"></i> 替代发音
+                                </div>
+                                <div class="word-row">
+                                    <div style="flex: 1;">
+                                        <div class="word">Florida</div>
+                                        <div class="phonetic">/ˈflɔrədə/</div>
+                                    </div>
+                                    <button class="play-btn" data-word="Florida" title="播放发音">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pronunciation-card" style="animation-delay: 0.3s;">
+                        <div class="card-header">G</div>
+                        <div class="card-body">
+                            <div class="pronunciation-item">
+                                <div class="pronunciation-type">
+                                    <i class="fas fa-microphone"></i> 标准发音
+                                </div>
+                                <div class="word-row">
+                                    <div style="flex: 1;">
+                                        <div class="word">Golf</div>
+                                        <div class="phonetic">/ɡɑːlf/</div>
+                                    </div>
+                                    <button class="play-btn" data-word="Golf" title="播放发音">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="pronunciation-item alternative">
+                                <div class="pronunciation-type">
+                                    <i class="fas fa-headphones"></i> 替代发音
+                                </div>
+                                <div class="word-row">
+                                    <div style="flex: 1;">
+                                        <div class="word">Germany</div>
+                                        <div class="phonetic">/ˈdʒɜːrməni/</div>
+                                    </div>
+                                    <button class="play-btn" data-word="Germany" title="播放发音">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pronunciation-card" style="animation-delay: 0.35s;">
+                        <div class="card-header">H</div>
+                        <div class="card-body">
+                            <div class="pronunciation-item">
+                                <div class="pronunciation-type">
+                                    <i class="fas fa-microphone"></i> 标准发音
+                                </div>
+                                <div class="word-row">
+                                    <div style="flex: 1;">
+                                        <div class="word">Hotel</div>
+                                        <div class="phonetic">/hoʊˈtel/</div>
+                                    </div>
+                                    <button class="play-btn" data-word="Hotel" title="播放发音">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="pronunciation-item alternative">
+                                <div class="pronunciation-type">
+                                    <i class="fas fa-headphones"></i> 替代发音
+                                </div>
+                                <div class="word-row">
+                                    <div style="flex: 1;">
+                                        <div class="word">Honolulu</div>
+                                        <div class="phonetic">/ˌhɑnəˈlulu/</div>
+                                    </div>
+                                    <button class="play-btn" data-word="Honolulu" title="播放发音">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pronunciation-card" style="animation-delay: 0.4s;">
+                        <div class="card-header">I</div>
+                        <div class="card-body">
+                            <div class="pronunciation-item">
+                                <div class="pronunciation-type">
+                                    <i class="fas fa-microphone"></i> 标准发音
+                                </div>
+                                <div class="word-row">
+                                    <div style="flex: 1;">
+                                        <div class="word">India</div>
+                                        <div class="phonetic">/ˈɪndiə/</div>
+                                    </div>
+                                    <button class="play-btn" data-word="India" title="播放发音">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="pronunciation-item alternative">
+                                <div class="pronunciation-type">
+                                    <i class="fas fa-headphones"></i> 替代发音
+                                </div>
+                                <div class="word-row">
+                                    <div style="flex: 1;">
+                                        <div class="word">Italy</div>
+                                        <div class="phonetic">/ˈɪtəlɪ/</div>
+                                    </div>
+                                    <button class="play-btn" data-word="Italy" title="播放发音">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pronunciation-card" style="animation-delay: 0.45s;">
+                        <div class="card-header">J</div>
+                        <div class="card-body">
+                            <div class="pronunciation-item">
+                                <div class="pronunciation-type">
+                                    <i class="fas fa-microphone"></i> 标准发音
+                                </div>
+                                <div class="word-row">
+                                    <div style="flex: 1;">
+                                        <div class="word">Juliett</div>
+                                        <div class="phonetic">/ˈdʒuliˌɛt/</div>
+                                    </div>
+                                    <button class="play-btn" data-word="Juliett" title="播放发音">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="pronunciation-item alternative">
+                                <div class="pronunciation-type">
+                                    <i class="fas fa-headphones"></i> 替代发音
+                                </div>
+                                <div class="word-row">
+                                    <div style="flex: 1;">
+                                        <div class="word">Japan</div>
+                                        <div class="phonetic">/dʒəˈpæn/</div>
+                                    </div>
+                                    <button class="play-btn" data-word="Japan" title="播放发音">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pronunciation-card" style="animation-delay: 0.5s;">
+                        <div class="card-header">K</div>
+                        <div class="card-body">
+                            <div class="pronunciation-item">
+                                <div class="pronunciation-type">
+                                    <i class="fas fa-microphone"></i> 标准发音
+                                </div>
+                                <div class="word-row">
+                                    <div style="flex: 1;">
+                                        <div class="word">Kilo</div>
+                                        <div class="phonetic">/ˈkiːloʊ/</div>
+                                    </div>
+                                    <button class="play-btn" data-word="Kilo" title="播放发音">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="pronunciation-item alternative">
+                                <div class="pronunciation-type">
+                                    <i class="fas fa-headphones"></i> 替代发音
+                                </div>
+                                <div class="word-row">
+                                    <div style="flex: 1;">
+                                        <div class="word">Kilowatt</div>
+                                        <div class="phonetic">/ˈkɪləwɒt/</div>
+                                    </div>
+                                    <button class="play-btn" data-word="Kilowatt" title="播放发音">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pronunciation-card" style="animation-delay: 0.55s;">
+                        <div class="card-header">L</div>
+                        <div class="card-body">
+                            <div class="pronunciation-item">
+                                <div class="pronunciation-type">
+                                    <i class="fas fa-microphone"></i> 标准发音
+                                </div>
+                                <div class="word-row">
+                                    <div style="flex: 1;">
+                                        <div class="word">Lima</div>
+                                        <div class="phonetic">/ˈliːmə/</div>
+                                    </div>
+                                    <button class="play-btn" data-word="Lima" title="播放发音">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="pronunciation-item alternative">
+                                <div class="pronunciation-type">
+                                    <i class="fas fa-headphones"></i> 替代发音
+                                </div>
+                                <div class="word-row">
+                                    <div style="flex: 1;">
+                                        <div class="word">London</div>
+                                        <div class="phonetic">/ˈlʌndən/</div>
+                                    </div>
+                                    <button class="play-btn" data-word="London" title="播放发音">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pronunciation-card" style="animation-delay: 0.6s;">
+                        <div class="card-header">M</div>
+                        <div class="card-body">
+                            <div class="pronunciation-item">
+                                <div class="pronunciation-type">
+                                    <i class="fas fa-microphone"></i> 标准发音
+                                </div>
+                                <div class="word-row">
+                                    <div style="flex: 1;">
+                                        <div class="word">Mike</div>
+                                        <div class="phonetic">/maɪk/</div>
+                                    </div>
+                                    <button class="play-btn" data-word="Mike" title="播放发音">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="pronunciation-item alternative">
+                                <div class="pronunciation-type">
+                                    <i class="fas fa-headphones"></i> 替代发音
+                                </div>
+                                <div class="word-row">
+                                    <div style="flex: 1;">
+                                        <div class="word">Mexico</div>
+                                        <div class="phonetic">/ˈmɛksəˌkoʊ/</div>
+                                    </div>
+                                    <button class="play-btn" data-word="Mexico" title="播放发音">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pronunciation-card" style="animation-delay: 0.65s;">
+                        <div class="card-header">N</div>
+                        <div class="card-body">
+                            <div class="pronunciation-item">
+                                <div class="pronunciation-type">
+                                    <i class="fas fa-microphone"></i> 标准发音
+                                </div>
+                                <div class="word-row">
+                                    <div style="flex: 1;">
+                                        <div class="word">November</div>
+                                        <div class="phonetic">/noʊˈvembər/</div>
+                                    </div>
+                                    <button class="play-btn" data-word="November" title="播放发音">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="pronunciation-item alternative">
+                                <div class="pronunciation-type">
+                                    <i class="fas fa-headphones"></i> 替代发音
+                                </div>
+                                <div class="word-row">
+                                    <div style="flex: 1;">
+                                        <div class="word">Norway</div>
+                                        <div class="phonetic">/ˈnɔrˌweɪ/</div>
+                                    </div>
+                                    <button class="play-btn" data-word="Norway" title="播放发音">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pronunciation-card" style="animation-delay: 0.7s;">
+                        <div class="card-header">O</div>
+                        <div class="card-body">
+                            <div class="pronunciation-item">
+                                <div class="pronunciation-type">
+                                    <i class="fas fa-microphone"></i> 标准发音
+                                </div>
+                                <div class="word-row">
+                                    <div style="flex: 1;">
+                                        <div class="word">Oscar</div>
+                                        <div class="phonetic">/ˈɒskə/</div>
+                                    </div>
+                                    <button class="play-btn" data-word="Oscar" title="播放发音">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="pronunciation-item alternative">
+                                <div class="pronunciation-type">
+                                    <i class="fas fa-headphones"></i> 替代发音
+                                </div>
+                                <div class="word-row">
+                                    <div style="flex: 1;">
+                                        <div class="word">Ontario</div>
+                                        <div class="phonetic">/ɑnˈtɛrioʊ/</div>
+                                    </div>
+                                    <button class="play-btn" data-word="Ontario" title="播放发音">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pronunciation-card" style="animation-delay: 0.75s;">
+                        <div class="card-header">P</div>
+                        <div class="card-body">
+                            <div class="pronunciation-item">
+                                <div class="pronunciation-type">
+                                    <i class="fas fa-microphone"></i> 标准发音
+                                </div>
+                                <div class="word-row">
+                                    <div style="flex: 1;">
+                                        <div class="word">Papa</div>
+                                        <div class="phonetic">/ˈpɑːpə/</div>
+                                    </div>
+                                    <button class="play-btn" data-word="Papa" title="播放发音">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="pronunciation-item alternative">
+                                <div class="pronunciation-type">
+                                    <i class="fas fa-headphones"></i> 替代发音
+                                </div>
+                                <div class="word-row">
+                                    <div style="flex: 1;">
+                                        <div class="word">Peter</div>
+                                        <div class="phonetic">/ˈpiːtə(r)/</div>
+                                    </div>
+                                    <button class="play-btn" data-word="Peter" title="播放发音">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pronunciation-card" style="animation-delay: 0.8s;">
+                        <div class="card-header">Q</div>
+                        <div class="card-body">
+                            <div class="pronunciation-item">
+                                <div class="pronunciation-type">
+                                    <i class="fas fa-microphone"></i> 标准发音
+                                </div>
+                                <div class="word-row">
+                                    <div style="flex: 1;">
+                                        <div class="word">Quebec</div>
+                                        <div class="phonetic">/kwəˈbɛk/</div>
+                                    </div>
+                                    <button class="play-btn" data-word="Quebec" title="播放发音">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="pronunciation-item alternative">
+                                <div class="pronunciation-type">
+                                    <i class="fas fa-headphones"></i> 替代发音
+                                </div>
+                                <div class="word-row">
+                                    <div style="flex: 1;">
+                                        <div class="word">Queen</div>
+                                        <div class="phonetic">/kwiːn/</div>
+                                    </div>
+                                    <button class="play-btn" data-word="Queen" title="播放发音">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pronunciation-card" style="animation-delay: 0.85s;">
+                        <div class="card-header">R</div>
+                        <div class="card-body">
+                            <div class="pronunciation-item">
+                                <div class="pronunciation-type">
+                                    <i class="fas fa-microphone"></i> 标准发音
+                                </div>
+                                <div class="word-row">
+                                    <div style="flex: 1;">
+                                        <div class="word">Romeo</div>
+                                        <div class="phonetic">/ˈroʊmioʊ/</div>
+                                    </div>
+                                    <button class="play-btn" data-word="Romeo" title="播放发音">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="pronunciation-item alternative">
+                                <div class="pronunciation-type">
+                                    <i class="fas fa-headphones"></i> 替代发音
+                                </div>
+                                <div class="word-row">
+                                    <div style="flex: 1;">
+                                        <div class="word">Radio</div>
+                                        <div class="phonetic">/ˈreɪdiəʊ/</div>
+                                    </div>
+                                    <button class="play-btn" data-word="Radio" title="播放发音">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pronunciation-card" style="animation-delay: 0.9s;">
+                        <div class="card-header">S</div>
+                        <div class="card-body">
+                            <div class="pronunciation-item">
+                                <div class="pronunciation-type">
+                                    <i class="fas fa-microphone"></i> 标准发音
+                                </div>
+                                <div class="word-row">
+                                    <div style="flex: 1;">
+                                        <div class="word">Sierra</div>
+                                        <div class="phonetic">/siˈerə/</div>
+                                    </div>
+                                    <button class="play-btn" data-word="Sierra" title="播放发音">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="pronunciation-item alternative">
+                                <div class="pronunciation-type">
+                                    <i class="fas fa-headphones"></i> 替代发音
+                                </div>
+                                <div class="word-row">
+                                    <div style="flex: 1;">
+                                        <div class="word">Sugar</div>
+                                        <div class="phonetic">/ˈʃʊɡər/</div>
+                                    </div>
+                                    <button class="play-btn" data-word="Sugar" title="播放发音">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pronunciation-card" style="animation-delay: 0.95s;">
+                        <div class="card-header">T</div>
+                        <div class="card-body">
+                            <div class="pronunciation-item">
+                                <div class="pronunciation-type">
+                                    <i class="fas fa-microphone"></i> 标准发音
+                                </div>
+                                <div class="word-row">
+                                    <div style="flex: 1;">
+                                        <div class="word">Tango</div>
+                                        <div class="phonetic">/ˈtæŋɡoʊ/</div>
+                                    </div>
+                                    <button class="play-btn" data-word="Tango" title="播放发音">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="pronunciation-item alternative">
+                                <div class="pronunciation-type">
+                                    <i class="fas fa-headphones"></i> 替代发音
+                                </div>
+                                <div class="word-row">
+                                    <div style="flex: 1;">
+                                        <div class="word">Tokyo</div>
+                                        <div class="phonetic">/ˈtoʊkioʊ/</div>
+                                    </div>
+                                    <button class="play-btn" data-word="Tokyo" title="播放发音">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pronunciation-card" style="animation-delay: 1s;">
+                        <div class="card-header">U</div>
+                        <div class="card-body">
+                            <div class="pronunciation-item">
+                                <div class="pronunciation-type">
+                                    <i class="fas fa-microphone"></i> 标准发音
+                                </div>
+                                <div class="word-row">
+                                    <div style="flex: 1;">
+                                        <div class="word">Uniform</div>
+                                        <div class="phonetic">/ˈjuːnɪfɔːrm/</div>
+                                    </div>
+                                    <button class="play-btn" data-word="Uniform" title="播放发音">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="pronunciation-item alternative">
+                                <div class="pronunciation-type">
+                                    <i class="fas fa-headphones"></i> 替代发音
+                                </div>
+                                <div class="word-row">
+                                    <div style="flex: 1;">
+                                        <div class="word">United</div>
+                                        <div class="phonetic">/juˈnaɪtɪd/</div>
+                                    </div>
+                                    <button class="play-btn" data-word="United" title="播放发音">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pronunciation-card" style="animation-delay: 1.05s;">
+                        <div class="card-header">V</div>
+                        <div class="card-body">
+                            <div class="pronunciation-item">
+                                <div class="pronunciation-type">
+                                    <i class="fas fa-microphone"></i> 标准发音
+                                </div>
+                                <div class="word-row">
+                                    <div style="flex: 1;">
+                                        <div class="word">Victor</div>
+                                        <div class="phonetic">/ˈvɪktər/</div>
+                                    </div>
+                                    <button class="play-btn" data-word="Victor" title="播放发音">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="pronunciation-item alternative">
+                                <div class="pronunciation-type">
+                                    <i class="fas fa-headphones"></i> 替代发音
+                                </div>
+                                <div class="word-row">
+                                    <div style="flex: 1;">
+                                        <div class="word">Virginia</div>
+                                        <div class="phonetic">/vərˈdʒɪniə/</div>
+                                    </div>
+                                    <button class="play-btn" data-word="Virginia" title="播放发音">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pronunciation-card" style="animation-delay: 1.1s;">
+                        <div class="card-header">W</div>
+                        <div class="card-body">
+                            <div class="pronunciation-item">
+                                <div class="pronunciation-type">
+                                    <i class="fas fa-microphone"></i> 标准发音
+                                </div>
+                                <div class="word-row">
+                                    <div style="flex: 1;">
+                                        <div class="word">Whisky</div>
+                                        <div class="phonetic">/ˈwɪski/</div>
+                                    </div>
+                                    <button class="play-btn" data-word="Whisky" title="播放发音">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="pronunciation-item alternative">
+                                <div class="pronunciation-type">
+                                    <i class="fas fa-headphones"></i> 替代发音
+                                </div>
+                                <div class="word-row">
+                                    <div style="flex: 1;">
+                                        <div class="word">Washington</div>
+                                        <div class="phonetic">/ˈwɑʃɪŋtən/</div>
+                                    </div>
+                                    <button class="play-btn" data-word="Washington" title="播放发音">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pronunciation-card" style="animation-delay: 1.15s;">
+                        <div class="card-header">X</div>
+                        <div class="card-body">
+                            <div class="pronunciation-item">
+                                <div class="pronunciation-type">
+                                    <i class="fas fa-microphone"></i> 标准发音
+                                </div>
+                                <div class="word-row">
+                                    <div style="flex: 1;">
+                                        <div class="word">X-ray</div>
+                                        <div class="phonetic">/ˈeks reɪ/</div>
+                                    </div>
+                                    <button class="play-btn" data-word="X-ray" title="播放发音">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pronunciation-card" style="animation-delay: 1.2s;">
+                        <div class="card-header">Y</div>
+                        <div class="card-body">
+                            <div class="pronunciation-item">
+                                <div class="pronunciation-type">
+                                    <i class="fas fa-microphone"></i> 标准发音
+                                </div>
+                                <div class="word-row">
+                                    <div style="flex: 1;">
+                                        <div class="word">Yankee</div>
+                                        <div class="phonetic">/ˈjæŋki/</div>
+                                    </div>
+                                    <button class="play-btn" data-word="Yankee" title="播放发音">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="pronunciation-item alternative">
+                                <div class="pronunciation-type">
+                                    <i class="fas fa-headphones"></i> 替代发音
+                                </div>
+                                <div class="word-row">
+                                    <div style="flex: 1;">
+                                        <div class="word">Yokohama</div>
+                                        <div class="phonetic">/ˌjoʊkəˈhɑmə/</div>
+                                    </div>
+                                    <button class="play-btn" data-word="Yokohama" title="播放发音">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pronunciation-card" style="animation-delay: 1.25s;">
+                        <div class="card-header">Z</div>
+                        <div class="card-body">
+                            <div class="pronunciation-item">
+                                <div class="pronunciation-type">
+                                    <i class="fas fa-microphone"></i> 标准发音
+                                </div>
+                                <div class="word-row">
+                                    <div style="flex: 1;">
+                                        <div class="word">Zulu</div>
+                                        <div class="phonetic">/ˈzuːluː/</div>
+                                    </div>
+                                    <button class="play-btn" data-word="Zulu" title="播放发音">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="pronunciation-item alternative">
+                                <div class="pronunciation-type">
+                                    <i class="fas fa-headphones"></i> 替代发音
+                                </div>
+                                <div class="word-row">
+                                    <div style="flex: 1;">
+                                        <div class="word">Zanzibar</div>
+                                        <div class="phonetic">/ˈzænzəˌbɑr/</div>
+                                    </div>
+                                    <button class="play-btn" data-word="Zanzibar" title="播放发音">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 数字标准发音模块 -->
+            <section class="module-container">
+                <h2>🔢 数字标准发音</h2>
+                <div class="grid-container">
+                    <div class="pronunciation-card" style="animation-delay: 0s;">
+                        <div class="card-header">1</div>
+                        <div class="card-body">
+                            <div class="pronunciation-item">
+                                <div class="pronunciation-type">
+                                    <i class="fas fa-microphone"></i> 标准发音
+                                </div>
+                                <div class="word-row">
+                                    <div style="flex: 1;">
+                                        <div class="word">One</div>
+                                        <div class="phonetic">/wʌn/</div>
+                                    </div>
+                                    <button class="play-btn" data-word="One" title="播放发音">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pronunciation-card" style="animation-delay: 0.05s;">
+                        <div class="card-header">2</div>
+                        <div class="card-body">
+                            <div class="pronunciation-item">
+                                <div class="pronunciation-type">
+                                    <i class="fas fa-microphone"></i> 标准发音
+                                </div>
+                                <div class="word-row">
+                                    <div style="flex: 1;">
+                                        <div class="word">Two</div>
+                                        <div class="phonetic">/tuː/</div>
+                                    </div>
+                                    <button class="play-btn" data-word="Two" title="播放发音">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pronunciation-card" style="animation-delay: 0.1s;">
+                        <div class="card-header">3</div>
+                        <div class="card-body">
+                            <div class="pronunciation-item">
+                                <div class="pronunciation-type">
+                                    <i class="fas fa-microphone"></i> 标准发音
+                                </div>
+                                <div class="word-row">
+                                    <div style="flex: 1;">
+                                        <div class="word">Three</div>
+                                        <div class="phonetic">/θriː/</div>
+                                    </div>
+                                    <button class="play-btn" data-word="Three" title="播放发音">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pronunciation-card" style="animation-delay: 0.15s;">
+                        <div class="card-header">4</div>
+                        <div class="card-body">
+                            <div class="pronunciation-item">
+                                <div class="pronunciation-type">
+                                    <i class="fas fa-microphone"></i> 标准发音
+                                </div>
+                                <div class="word-row">
+                                    <div style="flex: 1;">
+                                        <div class="word">Four</div>
+                                        <div class="phonetic">/fɔːr/</div>
+                                    </div>
+                                    <button class="play-btn" data-word="Four" title="播放发音">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pronunciation-card" style="animation-delay: 0.2s;">
+                        <div class="card-header">5</div>
+                        <div class="card-body">
+                            <div class="pronunciation-item">
+                                <div class="pronunciation-type">
+                                    <i class="fas fa-microphone"></i> 标准发音
+                                </div>
+                                <div class="word-row">
+                                    <div style="flex: 1;">
+                                        <div class="word">Five</div>
+                                        <div class="phonetic">/faɪv/</div>
+                                    </div>
+                                    <button class="play-btn" data-word="Five" title="播放发音">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pronunciation-card" style="animation-delay: 0.25s;">
+                        <div class="card-header">6</div>
+                        <div class="card-body">
+                            <div class="pronunciation-item">
+                                <div class="pronunciation-type">
+                                    <i class="fas fa-microphone"></i> 标准发音
+                                </div>
+                                <div class="word-row">
+                                    <div style="flex: 1;">
+                                        <div class="word">Six</div>
+                                        <div class="phonetic">/sɪks/</div>
+                                    </div>
+                                    <button class="play-btn" data-word="Six" title="播放发音">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pronunciation-card" style="animation-delay: 0.3s;">
+                        <div class="card-header">7</div>
+                        <div class="card-body">
+                            <div class="pronunciation-item">
+                                <div class="pronunciation-type">
+                                    <i class="fas fa-microphone"></i> 标准发音
+                                </div>
+                                <div class="word-row">
+                                    <div style="flex: 1;">
+                                        <div class="word">Seven</div>
+                                        <div class="phonetic">/ˈsevn/</div>
+                                    </div>
+                                    <button class="play-btn" data-word="Seven" title="播放发音">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pronunciation-card" style="animation-delay: 0.35s;">
+                        <div class="card-header">8</div>
+                        <div class="card-body">
+                            <div class="pronunciation-item">
+                                <div class="pronunciation-type">
+                                    <i class="fas fa-microphone"></i> 标准发音
+                                </div>
+                                <div class="word-row">
+                                    <div style="flex: 1;">
+                                        <div class="word">Eight</div>
+                                        <div class="phonetic">/eɪt/</div>
+                                    </div>
+                                    <button class="play-btn" data-word="Eight" title="播放发音">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pronunciation-card" style="animation-delay: 0.4s;">
+                        <div class="card-header">9</div>
+                        <div class="card-body">
+                            <div class="pronunciation-item">
+                                <div class="pronunciation-type">
+                                    <i class="fas fa-microphone"></i> 标准发音
+                                </div>
+                                <div class="word-row">
+                                    <div style="flex: 1;">
+                                        <div class="word">Nine</div>
+                                        <div class="phonetic">/naɪn/</div>
+                                    </div>
+                                    <button class="play-btn" data-word="Nine" title="播放发音">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pronunciation-card" style="animation-delay: 0.45s;">
+                        <div class="card-header">0</div>
+                        <div class="card-body">
+                            <div class="pronunciation-item">
+                                <div class="pronunciation-type">
+                                    <i class="fas fa-microphone"></i> 标准发音
+                                </div>
+                                <div class="word-row">
+                                    <div style="flex: 1;">
+                                        <div class="word">Zero</div>
+                                        <div class="phonetic">/ˈzɪroʊ/</div>
+                                    </div>
+                                    <button class="play-btn" data-word="Zero" title="播放发音">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 使用说明模块 -->
+            <section class="instructions-module">
+                <div class="instructions-content">
+                    <div class="instruction-item">
+                        <span class="highlight">📱 设备建议</span>
+                        <span>读音播放功能推荐在PC端使用，移动端功能可能不兼容。</span>
+                    </div>
+                    <div class="instruction-item">
+                        <span class="highlight">🔊 发音功能</span>
+                        <span>每个发音项右侧都有播放按钮，点击即可听到该单词的标准发音。</span>
+                    </div>
+                    <div class="instruction-item">
+                        <span class="highlight">🎵 音标说明</span>
+                        <span>/ / 中的符号是国际音标，表示该单词的标准发音。</span>
+                    </div>
+                    <div class="instruction-item">
+                        <span class="highlight">🌐 用途</span>
+                        <span>本工具适用于业余无线电爱好者学习标准英文字母和数字的发音。</span>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <script>
+        // 简单的Web Speech API集成（如果浏览器支持）
+        document.querySelectorAll('.play-btn:not(:disabled)').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const word = this.getAttribute('data-word');
+                if ('speechSynthesis' in window && word) {
+                    const utterance = new SpeechSynthesisUtterance(word);
+                    utterance.lang = 'en-US';
+                    utterance.rate = 0.9;
+                    window.speechSynthesis.cancel();
+                    window.speechSynthesis.speak(utterance);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

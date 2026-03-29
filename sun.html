@@ -4,159 +4,462 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>快点 HAM 工具箱 - 传播预测 - 欢哥科技</title>
-    <meta name="description" content="快点 HAM 工具箱是一个在 Web 上为业余无线电爱好者提供服务的工具集。">
-    <meta name="keywords" content="在线工具,无线电,业余无线电,HAM,梅登黑德网格定位系统,QRZ,中继查询">
-    <!-- Tailwind CSS CDN -->
+    <title>空间气象与传播预测 - 快点HAM工具箱</title>
+    <meta name="description" content="实时空间气象数据，帮助预测 HF 和 VHF 波段的传播情况。" />
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- jQuery library -->
-    <script src="https://cdnjs.loli.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap');
+
+        * {
+            font-family: 'Noto Sans SC', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        * {
+            scroll-behavior: smooth;
+        }
+
         body {
-            background: linear-gradient(135deg, #232526 0%, #414345 100%);
-            color: #e9ecef;
-            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #ffffff;
         }
 
-        h1, h2, .h5 {
-            color: #ffd700;
+        /* 苹果官网风格导航栏 */
+        .nav-link {
+            font-size: 15px;
+            font-weight: 400;
+            color: #000000;
+            transition: opacity 0.2s ease;
+            position: relative;
+            padding: 0 12px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            height: 44px;
         }
 
-        .jumbotron {
-            background: rgba(44, 62, 80, 0.95);
-            border-radius: 1.5rem;
+        .nav-link:hover {
+            opacity: 0.6;
+        }
+
+        .nav-link::after {
+            content: '';
+            width: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #0071e3 0%, #0071e3 100%);
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 2px;
+            box-shadow: 0 2px 8px rgba(0, 113, 227, 0.3);
+        }
+
+        .nav-dropdown:hover .nav-link::after,
+        .nav-dropdown.active .nav-link::after {
+            width: calc(100% - 24px);
+            box-shadow: 0 2px 12px rgba(0, 113, 227, 0.4);
+        }
+
+        .nav-dropdown {
+            position: relative;
+            display: inline-block;
+            height: 44px;
+        }
+
+        .dropdown-content {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-8px);
+            background-color: white;
+            min-width: 300px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            border-radius: 12px;
+            padding: 16px 0;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+        }
+
+        .nav-dropdown:hover .dropdown-content,
+        .nav-dropdown.active .dropdown-content {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+            pointer-events: auto;
+        }
+
+        .dropdown-section {
+            padding: 8px 0;
+        }
+
+        .dropdown-section:not(:last-child) {
+            border-bottom: 1px solid #e5e5e7;
+            margin-bottom: 8px;
+        }
+
+        .dropdown-item {
+            display: block;
+            padding: 12px 20px;
+            color: #000000;
+            text-decoration: none;
+            font-size: 13px;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .dropdown-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #f5f5f7;
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: -1;
+        }
+
+        .dropdown-item:hover::before {
+            transform: scaleX(1);
+        }
+
+        .dropdown-item:hover {
+            color: #0071e3;
+        }
+
+        /* 卡片样式 */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            margin: 3rem 0;
         }
 
         .card {
-            background: rgba(52, 58, 64, 0.95);
+            background: white;
+            border: 1px solid #e5e5e7;
+            border-radius: 1.5rem;
+            padding: 2rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
         }
 
-        .lead {
-            color: #fffbe7;
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+            border-color: #d0d0d0;
+        }
+
+        .card h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #000000;
+        }
+
+        .card-image {
+            width: 100%;
+            height: auto;
+            margin: 1rem 0;
+            border-radius: 1rem;
+            overflow: hidden;
+            background: #f5f5f7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 300px;
+        }
+
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .card p {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #666666;
+            margin-top: 1rem;
+        }
+
+        .card-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .card-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .intro-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f5f5f7 100%);
+            padding: 3rem 2rem;
+            border-radius: 1.5rem;
+            border: 1px solid #e5e5e7;
+            margin-bottom: 2rem;
+        }
+
+        .intro-card h2 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #000000;
+        }
+
+        .intro-card p {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: #666666;
+        }
+
+        .footer-note {
+            text-align: center;
+            padding: 2rem;
+            color: #666666;
+            font-size: 0.95rem;
+            margin-top: 3rem;
+            border-top: 1px solid #e5e5e7;
+        }
+
+        .footer-note a {
+            color: #0071e3;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .footer-note a:hover {
+            text-decoration: underline;
+        }
+
+        /* 表格样式优化 */
+        .indicators-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .indicator-card {
+            background: linear-gradient(135deg, #f5f5f7 0%, #ffffff 100%);
+            border: 1px solid #e5e5e7;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .indicator-card:hover {
+            border-color: #0071e3;
+            box-shadow: 0 4px 12px rgba(0, 113, 227, 0.1);
+        }
+
+        .indicator-name {
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: #0071e3;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .indicator-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #000000;
+            margin-bottom: 0.75rem;
+        }
+
+        .indicator-range {
+            font-size: 0.875rem;
+            color: #666666;
+            line-height: 1.5;
+        }
+
+        /* 容器 */
+        .container {
+            max-width: 90rem;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .ceo-container {
+            padding: 2rem 1rem;
         }
     </style>
 </head>
 
-<body>
-    <!-- 顶部导航栏 -->
-    <nav class="bg-gray-900 shadow-md">
-        <div class="container mx-auto px-4 py-4 flex items-center justify-between">
-            <a class="text-xl font-bold text-white hover:text-yellow-400 transition" href="/">快点 HAM 工具箱</a>
-            <span class="text-gray-300">传播预测</span>
-        </div>
-    </nav>
+<body class="overflow-x-hidden">
+    <!-- 主要内容 -->
+    <main>
+        <section class="ceo-container container">
+            <!-- 介绍卡片 -->
+            <div class="intro-card">
+                <h2>🌞 空间气象与传播预测</h2>
+                <p>本页为您精心准备了各波段传播开通情况及实时太阳图片，可用于预测短波通信传播，助您 DX 成功。</p>
+            </div>
 
-    <div class="container mx-auto px-4 py-8">
-        <div class="jumbotron mt-6 text-center rounded-2xl p-10 shadow-lg">
-            <h1 class="text-4xl md:text-5xl font-bold mb-8">传播预测</h1>
-            <div class="content">
-                <div class="flex flex-col md:flex-row justify-center gap-4 mb-6">
-                    <div id="beijingTime" class="px-4 py-2 rounded bg-gray-800 text-yellow-400 font-bold"></div>
-                    <div id="utcTime" class="px-4 py-2 rounded bg-gray-800 text-blue-400 font-bold"></div>
+            <!-- 卡片网格 -->
+            <div class="cards-grid">
+                <!-- 卡片1：HF/VHF 传播预测 -->
+                <div class="card">
+                    <h2>📡 HF/VHF 传播预测</h2>
+                    <div class="card-image">
+                        <img src="https://www.hamqsl.com/solar101vhfper.php" alt="HF/VHF 传播预测图">
+                    </div>
+                    <p class="mb-4 text-gray-600">传播预测中常见的空间气象指数说明：</p>
+                    <div class="indicators-grid">
+                        <div class="indicator-card">
+                            <div class="indicator-name">SFI</div>
+                            <div class="indicator-title">太阳辐射指数</div>
+                            <div class="indicator-range">范围：62-300 | 影响F层 | 高于200时有利短波传播</div>
+                        </div>
+                        <div class="indicator-card">
+                            <div class="indicator-name">SN</div>
+                            <div class="indicator-title">太阳黑子数</div>
+                            <div class="indicator-range">范围：0-250 | 与SFI有关 | 黑子多表示太阳活跃</div>
+                        </div>
+                        <div class="indicator-card">
+                            <div class="indicator-name">K 指数</div>
+                            <div class="indicator-title">地磁扰动分量</div>
+                            <div class="indicator-range">范围：0-9 | 大于4为磁暴 | 影响极地传播</div>
+                        </div>
+                        <div class="indicator-card">
+                            <div class="indicator-name">A 指数</div>
+                            <div class="indicator-title">地磁活动日平均</div>
+                            <div class="indicator-range">范围：0-400 | 反映全球地磁活动 | 低于7时最佳</div>
+                        </div>
+                        <div class="indicator-card">
+                            <div class="indicator-name">X-ray</div>
+                            <div class="indicator-title">X射线强度</div>
+                            <div class="indicator-range">等级：A-X | 影响D层 | 高于M级对短波不利</div>
+                        </div>
+                        <div class="indicator-card">
+                            <div class="indicator-name">304Å</div>
+                            <div class="indicator-title">极紫外辐射</div>
+                            <div class="indicator-range">数值越高越好 | 增强F层 | 促进高频开放</div>
+                        </div>
+                        <div class="indicator-card">
+                            <div class="indicator-name">Bz</div>
+                            <div class="indicator-title">星际磁场分量</div>
+                            <div class="indicator-range">范围：-50-+50 | 负值时地磁暴 | 影响极地通信</div>
+                        </div>
+                        <div class="indicator-card">
+                            <div class="indicator-name">Geomag</div>
+                            <div class="indicator-title">地磁宁静度</div>
+                            <div class="indicator-range">分8级 | 与K指数有关 | 0最宁静，7最活跃</div>
+                        </div>
+                        <div class="indicator-card">
+                            <div class="indicator-name">SW</div>
+                            <div class="indicator-title">太阳风速</div>
+                            <div class="indicator-range">范围：0-1000 km/s | 高于500对短波不利 | 影响传播质量</div>
+                        </div>
+                        <div class="indicator-card">
+                            <div class="indicator-name">Ptn Flx</div>
+                            <div class="indicator-title">质子密度</div>
+                            <div class="indicator-range">单位：p/cm³ | 影响E层 | 高值时增加吸收</div>
+                        </div>
+                        <div class="indicator-card">
+                            <div class="indicator-name">Elc Flx</div>
+                            <div class="indicator-title">电子密度</div>
+                            <div class="indicator-range">单位：e/cm³ | 影响E层 | 与蛋质子密度配合判断</div>
+                        </div>
+                        <div class="indicator-card">
+                            <div class="indicator-name">Aurora</div>
+                            <div class="indicator-title">极光指数</div>
+                            <div class="indicator-range">影响10米-70厘米传播 | 强极光时开放 | 特别是VHF段</div>
+                        </div>
+                        <div class="indicator-card">
+                            <div class="indicator-name">Aur Lat</div>
+                            <div class="indicator-title">极光纬度</div>
+                            <div class="indicator-range">越低覆盖范围越大 | 极光南下时中国可见 | 促进VHF通信</div>
+                        </div>
+                        <div class="indicator-card">
+                            <div class="indicator-name">Sig</div>
+                            <div class="indicator-title">HF底噪</div>
+                            <div class="indicator-range">与太阳风速有关 | 低噪声时信号清晰 | 0-9级，低于3最佳</div>
+                        </div>
+                    </div>
                 </div>
-                <script>
-                    function pad(num) {
-                        return num < 10 ? '0' + num : num;
-                    }
-                    function formatDate(date) {
-                        return date.getFullYear() + '-' +
-                            pad(date.getMonth() + 1) + '-' +
-                            pad(date.getDate()) + ' ' +
-                            pad(date.getHours()) + ':' +
-                            pad(date.getMinutes()) + ':' +
-                            pad(date.getSeconds());
-                    }
-                    function displayTime() {
-                        var now = new Date();
-                        var bjDate = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Shanghai' }));
-                        var beijingTime = formatDate(bjDate);
-                        var utcDate = new Date(now.getTime() + now.getTimezoneOffset() * 60000);
-                        var utcTime = formatDate(utcDate);
-                        document.getElementById("beijingTime").textContent = "北京时间: " + beijingTime;
-                        document.getElementById("utcTime").textContent = "UTC 时间: " + utcTime;
-                    }
-                    setInterval(displayTime, 1000);
-                    displayTime();
-                </script>
-                <div class="maincontent">
-                    <p class="lead mb-6 text-lg">
-                        <strong>本页为您精心准备了各波段传播开通情况及实时太阳图片，可用于预测短波通信传播，助您 DX 成功。</strong>
-                    </p>
-                    
-                    <!-- UV 传播 -->
-                    <div class="card mb-6 shadow-md rounded-lg p-6">
-                        <h2 class="h5 text-2xl font-bold mb-4">UV 传播</h2>
-                        <a href="https://www.dxinfocentre.com/tropo_eas.html" class="block">
-                            <img class="rounded mb-2 w-full max-w-3xl mx-auto" height="360px"
-                                src="https://www.dxinfocentre.com/tr_map/fcst/eas006.png" alt="UV传播">
+
+                <!-- 卡片2和3并排：太阳图像 + 空间环境 -->
+                <div class="card-row">
+                    <div class="card">
+                        <h2>☀️ 太阳图像</h2>
+                        <div class="card-image">
+                            <img src="https://www.hamqsl.com/solarsun.php" alt="太阳图像">
+                        </div>
+                        <p>实时太阳图像（SDO/HMI），展示日面活动区、耀斑、暗条等太阳活动情况，辅助判断电离层扰动。</p>
+                    </div>
+
+                    <div class="card">
+                        <h2>🛰️ 空间环境</h2>
+                        <div class="card-image">
+                            <img src="https://www.hamqsl.com/solarmap.php" alt="空间环境图">
+                        </div>
+                        <p>空间环境动态地图，显示范艾伦辐射带、磁层顶位置、电离层总电子含量等，帮助理解空间天气。</p>
+                    </div>
+                </div>
+
+                <!-- 卡片4和5并排：月球图像 + 太阳系图像 -->
+                <div class="card-row">
+                    <div class="card">
+                        <h2>🌕 星球图像</h2>
+                        <div class="card-image">
+                            <img src="https://www.hamqsl.com/moonglobe.php" alt="月球图像">
+                        </div>
+                        <p>实时月球图像，展示当前月相、月球天平动以及月球在天空中的位置，对EME通信有参考价值。</p>
+                    </div>
+
+                    <div class="card">
+                        <h2>🪐 太阳系图像</h2>
+                        <div class="card-image">
+                            <img src="https://www.hamqsl.com/solarsystem.php" alt="太阳系图像">
+                        </div>
+                        <p>太阳系实时状态图，显示行星当前位置、太阳活动区分布，帮助理解行星际空间环境对电波传播的影响。</p>
+                    </div>
+                </div>
+
+                <!-- 卡片6：UV传播 -->
+                <div class="card">
+                    <h2>☂️ UV 传播</h2>
+                    <div class="card-image">
+                        <img src="https://www.dxinfocentre.com/tr_map/fcst/eas006.png" alt="UV传播">
+                    </div>
+                    <p>实时紫外线传播预测图，帮助判断UHF和微波波段的传播条件，数据来自DXInfocentre。</p>
+                </div>
+
+                <!-- 卡片7：电离层 TEC 现报 -->
+                <div class="card">
+                    <h2>📊 电离层 TEC 现报</h2>
+                    <p class="mb-4">实时电离层总电子含量现报，数据来自国家地震局地球物理研究所，对电波传播有重要参考价值。</p>
+                    <div class="card-image">
+                        <a href="http://www.sepc.ac.cn/TEC_chn.php" target="_blank">
+                            <img class="cursor-pointer hover:opacity-80 transition" src="imgs/tec_202601052345.png"
+                                alt="电离层TEC现报">
                         </a>
                     </div>
-
-                    <!-- 短波传播和空间环境 -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                        <div class="card h-full shadow-md rounded-lg p-6">
-                            <h2 class="h5 text-2xl font-bold mb-4">短波传播</h2>
-                            <a href="https://www.hamqsl.com/solar.html" class="block">
-                                <img class="rounded mb-2 w-full" src="https://www.hamqsl.com/solar101pic.php" alt="短波传播">
-                            </a>
-                        </div>
-                        <div class="card h-full shadow-md rounded-lg p-6">
-                            <h2 class="h5 text-2xl font-bold mb-4">空间环境</h2>
-                            <a href="https://www.hamqsl.com/solar.html" class="block">
-                                <img class="rounded mb-2 w-full" src="https://www.hamqsl.com/solarmap.php" alt="空间环境">
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- 实时太阳 -->
-                    <div class="card mb-6 shadow-md rounded-lg p-6">
-                        <h2 class="h5 text-2xl font-bold mb-4">实时太阳</h2>
-                        <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
-                            <div class="col">
-                                <img class="rounded shadow-md w-full"
-                                    src="https://sohowww.nascom.nasa.gov/data/realtime/eit_304/512/latest.jpg"
-                                    alt="eit_304">
-                            </div>
-                            <div class="col">
-                                <img class="rounded shadow-md w-full"
-                                    src="https://sohowww.nascom.nasa.gov/data/realtime/eit_284/512/latest.jpg"
-                                    alt="eit_284">
-                            </div>
-                            <div class="col">
-                                <img class="rounded shadow-md w-full"
-                                    src="https://sohowww.nascom.nasa.gov/data/realtime/eit_171/512/latest.jpg"
-                                    alt="eit_171">
-                            </div>
-                            <div class="col">
-                                <img class="rounded shadow-md w-full"
-                                    src="https://sohowww.nascom.nasa.gov/data/realtime/eit_195/512/latest.jpg"
-                                    alt="eit_195">
-                            </div>
-                            <div class="col">
-                                <img class="rounded shadow-md w-full"
-                                    src="https://sohowww.nascom.nasa.gov/data/realtime/c2/512/latest.jpg"
-                                    alt="c2">
-                            </div>
-                            <div class="col">
-                                <img class="rounded shadow-md w-full"
-                                    src="https://sohowww.nascom.nasa.gov/data/realtime/c3/512/latest.jpg"
-                                    alt="c3">
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 电离层 TEC 现报 -->
-                    <div class="card mb-6 shadow-md rounded-lg p-6">
-                        <h2 class="h5 text-2xl font-bold mb-4">电离层 TEC 现报</h2>
-                        <p class="mb-4">点击图片获取最新 TEC 现报</p>
-                        <a href="http://www.sepc.ac.cn/TEC_chn.php" class="block">
-                            <img class="rounded shadow-md w-full max-w-2xl mx-auto" src="img/tec.png" alt="TEC">
-                        </a>
-                    </div>
+                    <p class="text-sm text-gray-500 mt-4">点击图片查看最新数据</p>
                 </div>
             </div>
-        </div>
-    </div>
+
+            <!-- 页脚说明 -->
+            <div class="footer-note">
+                数据仅供参考，更多空间气象信息请访问具体数据来源。
+            </div>
+        </section>
+    </main>
+
+
+
+
 </body>
 
 </html>

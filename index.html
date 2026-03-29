@@ -1,336 +1,778 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>快点HAM工具箱-欢哥科技</title>
     <meta name="description" content="快点HAM工具箱是一个在Web上为业余无线电爱好者提供服务的工具集。" />
     <meta name="keywords" content="在线工具,无线电,业余无线电,HAM,梅登黑德网格定位系统,QRZ,中继查询">
-    
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'ham-blue': '#1e40af',  /* 深蓝色 */
-                        'ham-orange': '#f97316', /* 橙色 */
-                    },
-                    // 自定义字体类，用于模拟数码管效果
-                    fontFamily: {
-                        'digital': ['"DS-Digital"', 'monospace'], 
-                    }
-                }
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap');
+
+        * {
+            font-family: 'Noto Sans SC', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        /* 苹果风格的平滑过渡 */
+        * {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: #ffffff;
+        }
+
+        /* 渐变背景 */
+        .hero-gradient {
+            background: linear-gradient(135deg, #ffffff 0%, #f5f5f7 100%);
+        }
+
+        /* 卡片悬停效果 */
+        .card-hover {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+        }
+
+        /* 文本渐变效果 */
+        .text-gradient {
+            background: linear-gradient(135deg, #000000 0%, #333333 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* 圆形icon背景 */
+        .icon-bg {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
             }
         }
-    </script>
-    
-    <style>
-        /* 调整页面的默认字体，增强可读性 */
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+        /* 按钮效果 */
+        .btn-apple {
+            position: relative;
+            overflow: hidden;
+            background-color: #000000;
+            color: #ffffff;
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 12px;
         }
 
-        /* 导入 DS-Digital 字体，用于数码管效果 */
-        /* 注意：如果实际部署，需要确保这个字体文件是可访问的，这里仅为演示效果 */
-        @font-face {
-            font-family: 'DS-Digital';
-            src: url('/fonts/DS-DIGI.TTF') format('truetype');
-            font-weight: normal;
-            font-style: normal;
+        .btn-apple:hover {
+            background-color: #1d1d1f;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
         }
 
-        /* 数码管样式，确保在没有自定义字体时仍有等宽备选 */
+        .btn-apple-outline {
+            border: 1.5px solid #000000;
+            color: #000000;
+            background-color: transparent;
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 12px;
+        }
+
+        .btn-apple-outline:hover {
+            background-color: #000000;
+            color: #ffffff;
+        }
+
+        /* 苹果官网风格导航栏 */
+        .nav-link {
+            font-size: 15px;
+            font-weight: 400;
+            color: #000000;
+            transition: opacity 0.2s ease;
+            position: relative;
+            padding: 0 12px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            height: 44px;
+        }
+
+        .nav-link:hover {
+            opacity: 0.6;
+        }
+
+        .nav-link:active {
+            opacity: 0.4;
+        }
+
+        .nav-link::after {
+            content: '';
+            width: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #0071e3 0%, #0071e3 100%);
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 2px;
+            box-shadow: 0 2px 8px rgba(0, 113, 227, 0.3);
+        }
+
+        .nav-dropdown:hover .nav-link::after,
+        .nav-dropdown.active .nav-link::after {
+            width: calc(100% - 24px);
+            box-shadow: 0 2px 12px rgba(0, 113, 227, 0.4);
+        }
+
+        .nav-dropdown {
+            position: relative;
+            display: inline-block;
+            height: 44px;
+        }
+
+        .dropdown-content {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-8px);
+            background-color: white;
+            min-width: 300px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            border-radius: 12px;
+            padding: 16px 0;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+            margin-top: 8px;
+        }
+
+        .nav-dropdown:hover .dropdown-content,
+        .nav-dropdown.active .dropdown-content {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+            pointer-events: auto;
+        }
+
+        .dropdown-section {
+            padding: 8px 0;
+        }
+
+        .dropdown-section:not(:last-child) {
+            border-bottom: 1px solid #e5e5e7;
+            margin-bottom: 8px;
+        }
+
+        .dropdown-title {
+            padding: 8px 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .dropdown-item {
+            display: block;
+            padding: 12px 20px;
+            color: #000000;
+            text-decoration: none;
+            font-size: 13px;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: visible;
+            pointer-events: auto;
+            z-index: 10;
+        }
+
+        .dropdown-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #f5f5f7;
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .dropdown-item:hover::before {
+            transform: scaleX(1);
+        }
+
+        .dropdown-item:hover {
+            color: #0071e3;
+        }
+
+        .search-icon {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            transition: opacity 0.2s ease;
+        }
+
+        .search-icon:hover {
+            opacity: 0.6;
+        }
+
+        /* 数字时钟字体样式 */
         .font-digital {
-            font-family: 'DS-Digital', 'monospace';
-            letter-spacing: 0.1em; /* 增加字母间距 */
+            font-family: 'Courier New', 'Courier', monospace;
+            letter-spacing: 0.1em;
+        }
+
+        /* 内阴影效果 */
+        .shadow-inner-xl {
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4), 0 4px 12px rgba(0, 0, 0, 0.2);
         }
     </style>
 </head>
-<body class="bg-gray-50">
 
-    <header class="sticky top-0 z-50 bg-white shadow-lg">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center py-3">
-            <div class="text-2xl font-bold text-ham-blue">
-                <a href="#">
-                    <span class="text-ham-orange">CQ</span>-Toolbox
-                </a>
-            </div>
+<body class="overflow-x-hidden">
+    <!-- 导航栏 - 苹果官网风格 -->
+    <nav class="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-white/70 border-b border-gray-300/30">
+        <div class="max-w-full px-0">
+            <div class="flex items-center h-14 px-6 md:px-8">
 
-            <nav class="flex flex-wrap gap-1 md:gap-0 items-center">
-                <a class="px-3 py-2 text-gray-700 hover:bg-gray-100 hover:text-ham-blue transition font-medium rounded-lg" href="#">首页</a>
+                <!-- Logo -->
+                <div class="flex items-center space-x-2">
+                    <div class="text-2xl font-bold text-gray-900">📡</div>
+                    <span class="text-sm font-semibold text-gray-900 hidden sm:block">HAM Tools</span>
+                </div>
 
-                <a class="px-3 py-2 text-gray-700 hover:bg-gray-100 hover:text-ham-blue transition font-medium rounded-lg" href="https://www.cqid.cn/news/article" target="_blank">考试动态</a>
+                <!-- 导航菜单 - 居中 -->
+                <div class="hidden md:flex items-center space-x-8 flex-1 justify-center">
+                    <!-- 学习考试 -->
+                    <div class="nav-dropdown group">
+                        <a class="nav-link">📝 学习考试</a>
+                        <div class="dropdown-content">
+                            <div class="dropdown-section">
+                                <a href="https://www.cqid.cn/news/article" class="dropdown-item">考试动态</a>
+                                <a href="https://www.cqid.cn/" class="dropdown-item">模拟考试</a>
+                                <a href="http://82.157.138.16:8091/CRAC/crac/index.html"
+                                    class="dropdown-item">业余无线电台操作技术能力验证及信息管理系统</a>
+                                <a href="https://cw.quickso.cn/" class="dropdown-item">CW练习</a>
+                                <a href="https://hamstudy.org/" class="dropdown-item">FCCStudy</a>
+                            </div>
+                        </div>
+                    </div>
 
-                <a class="px-3 py-2 text-gray-700 hover:bg-gray-100 hover:text-ham-blue transition font-medium rounded-lg" href="sun.html">传播预测</a>
+                    <!-- 知识科普 -->
+                    <div class="nav-dropdown group">
+                        <a class="nav-link">💡 知识科普</a>
+                        <div class="dropdown-content">
+                            <div class="dropdown-section">
+                                <a href="https://baike.baidu.com/item/%E4%B8%9A%E4%BD%99%E6%97%A0%E7%BA%BF%E7%94%B5"
+                                    class="dropdown-item">百科</a>
+                                <a href="https://search.bilibili.com/all?keyword=%E4%B8%9A%E4%BD%99%E6%97%A0%E7%BA%BF%E7%94%B5"
+                                    class="dropdown-item">相关视频（Bilibili）</a>
+                                <a href="https://docs.hamcq.cn/" class="dropdown-item">HamCQ手册</a>
+                                <a href="https://huangenet.lanzoub.com/i3hlV17yi3rg"
+                                    class="dropdown-item">业余无线电通信第5版（电子书）</a>
+                                <a href="jsf.html" class="dropdown-item">字母解释法</a>
+                            </div>
+                        </div>
+                    </div>
 
-                <div class="group relative px-3 py-2">
-                    <button class="text-gray-700 hover:bg-gray-100 hover:text-ham-blue transition font-medium flex items-center gap-1 rounded-lg">
-                        知识
-                        <svg class="w-4 h-4 text-gray-500 transform transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                    </button>
-                    <div class="hidden group-hover:block absolute left-0 mt-2 w-56 bg-white rounded-lg shadow-xl py-2 z-20 border border-gray-100">
-                        <a class="block px-4 py-2 text-gray-800 hover:bg-blue-50 hover:text-ham-blue transition" href="https://zh.wikipedia.org/wiki/%E4%B8%9A%E4%BD%99%E6%97%A0%E7%BA%BF%E7%94%B5" target="_blank">Wiki (业余无线电)</a>
-                        <a class="block px-4 py-2 text-gray-800 hover:bg-blue-50 hover:text-ham-blue transition" href="https://www.yuque.com/ham/base" target="_blank">无线电基础</a>
-                        <a class="block px-4 py-2 text-gray-800 hover:bg-blue-50 hover:text-ham-blue transition" href="map.html">CQ图表</a>
-                        <a class="block px-4 py-2 text-gray-800 hover:bg-blue-50 hover:text-ham-blue transition" href="https://search.bilibili.com/all?keyword=%E4%B8%9A%E4%BD%99%E6%97%A0%E7%BA%BF%E7%94%B5" target="_blank">相关视频</a>
-                        <hr class="my-2 border-gray-200">
-                        <a class="block px-4 py-2 text-gray-800 hover:bg-blue-50 hover:text-ham-blue transition" href="https://docs.hamcq.cn/" target="_blank">HamCQ手册</a>
-                        <a class="block px-4 py-2 text-gray-800 hover:bg-blue-50 hover:text-ham-blue transition" href="https://hamstudy.org/" target="_blank">FCC题库</a>
-                        <a class="block px-4 py-2 text-gray-800 hover:bg-blue-50 hover:text-ham-blue transition" href="https://docs.hamcq.cn/pages/450c65/" target="_blank">业余无线电卫星通联指南</a>
-                        <a class="block px-4 py-2 text-gray-800 hover:bg-blue-50 hover:text-ham-blue transition" href="https://huangenet.lanzoub.com/i3hlV17yi3rg" target="_blank">业余无线电通信（第五版）</a>
+                    <!-- 传播预测 -->
+                    <div class="nav-dropdown group">
+                        <a class="nav-link" href="sun.html">☀️ 传播预测</a>
+                    </div>
+                    <!-- 短波频率 -->
+                    <div class="nav-dropdown group">
+                        <a class="nav-link" href="dbpl.html">🚩 短波常用频率</a>
+                    </div>
+
+                    <!-- 中继地图 -->
+                    <div class="nav-dropdown group">
+                        <a class="nav-link">🗺️ 中继</a>
+                        <div class="dropdown-content">
+                            <div class="dropdown-section">
+                                <a href="https://forum.hamcq.cn/relay" class="dropdown-item">中继查询</a>
+                                <a href="https://repeater.quickso.cn/" class="dropdown-item">中继地图</a>
+                                <!-- <a href="#" class="dropdown-item">覆盖范围分析</a> -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 卫星追踪 -->
+                    <div class="nav-dropdown group">
+                        <a class="nav-link">🛰️ 卫星追踪</a>
+                        <div class="dropdown-content">
+                            <div class="dropdown-section">
+                                <a href="http://amsat.org.ar/pass.htm" class="dropdown-item">卫星过境查询</a>
+                                <a href="https://www.heavens-above.com/AmateurSats.aspx?lat=0&lng=0&loc=Unspecified&alt=0&tz=UCT"
+                                    class="dropdown-item">轨道信息</a>
+                                <!-- <a href="#" class="dropdown-item">实时追踪</a> -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 查询工具 -->
+                    <div class="nav-dropdown group">
+                        <a class="nav-link">📍 查询工具</a>
+                        <div class="dropdown-content">
+                            <div class="dropdown-section">
+                                <a href="https://qth.quickso.cn/" class="dropdown-item">梅登黑德网格定位</a>
+                                <a href="https://aprs.tv/" class="dropdown-item">APRS地图</a>
+                                <a href="https://www.receiverbook.de/map" class="dropdown-item">SDR地图</a>
+                                <a href="http://www.short-wave.info/" class="dropdown-item">短波广播查询</a>
+                                <a href="https://www.qrz.com/" class="dropdown-item">QRZ全球呼号查询</a>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <!-- 解码工具 -->
+                    <div class="nav-dropdown group">
+                        <a class="nav-link">📡 解码工具</a>
+                        <div class="dropdown-content">
+                            <div class="dropdown-section">
+                                <a href="https://noaa.quickso.cn/" class="dropdown-item">NOAA卫星解码</a>
+                                <a href="https://muzihuaner.github.io/Morse-Code-Translation/"
+                                    class="dropdown-item">CW翻译</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 在线工具 -->
+                    <div class="nav-dropdown group">
+                        <a class="nav-link">📻 在线工具</a>
+                        <div class="dropdown-content">
+                            <div class="dropdown-section">
+                                <a href="https://radio.quickso.cn/" class="dropdown-item">SDR网页客户端</a>
+                                <a href="https://k5.vicicode.cn/" class="dropdown-item">K5Web工具</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <a class="px-3 py-2 text-gray-700 hover:bg-gray-100 hover:text-ham-blue transition font-medium rounded-lg" href="http://yc-yjwp.ysepan.com/" target="_blank">软件库</a>
+                <!-- 右侧菜单 -->
+                <div class="flex items-center space-x-6">
+                    <a class="px-4 py-2 text-white bg-orange-500 hover:bg-orange-600 transition-all duration-200 font-medium rounded-full text-sm"
+                        href="https://pay.quickso.cn" target="_blank">
+                        <span class="hidden md:inline">支持我们</span>💖
+                    </a>
 
-                <a class="px-3 py-2 text-white bg-ham-orange hover:bg-orange-600 transition font-bold rounded-full ml-2" href="https://pay.quickso.cn" target="_blank">
-                    <span class="hidden md:inline">支持 </span>💖 捐赠
-                </a>
-            </nav>
-        </div>
-    </header>
-
-    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-0"> <section class="text-center py-20 bg-ham-blue rounded-2xl shadow-2xl mb-5 mt-5 text-white bg-opacity-95">
-            <h1 class="text-6xl font-extrabold mb-4">
-                快点HAM工具箱
-            </h1>
-            <p class="text-xl text-blue-200 mb-10 max-w-3xl mx-auto">
-                一站式业余无线电工具集合，从传播预测到卫星追踪，助力你的每一次 <span class="font-semibold text-ham-orange">CQ</span>！
-            </p>
-            <div class="space-x-4">
-                <a href="https://forum.hamcq.cn/relay" target="_blank" class="inline-block bg-ham-orange text-white font-bold py-3 px-8 rounded-full hover:bg-orange-600 transition shadow-xl transform hover:scale-105">
-                    查询中继 📡
-                </a>
-                <a href="https://qth.quickso.cn/" target="_blank" class="inline-block bg-gray-200 text-gray-800 font-bold py-3 px-8 rounded-full hover:bg-gray-300 transition shadow-lg transform hover:scale-105">
-                    网格定位 🧭
-                </a>
-            </div>
-        </section>
-
-        
-        <div class="bg-gray-900 text-white py-6 shadow-2xl mb-5 rounded-xl border-4 border-gray-800">
-            <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap justify-center md:justify-center gap-10 text-xl font-mono">
-                
-                <div class="flex flex-col items-center space-y-2 p-4 bg-gray-800/80 rounded-lg shadow-inner-xl transform hover:scale-105 transition duration-300 w-full md:w-auto">
-                    <span class="font-bold text-gray-400 text-xs uppercase tracking-wider">UTC (Zulu) - 世界时</span>
-                    <span 
-                        id="utc-time" 
-                        class="text-green-500 text-5xl md:text-6xl font-digital drop-shadow-lg" 
-                        style="text-shadow: 0 0 10px rgba(52, 211, 153, 0.7), 0 0 20px rgba(52, 211, 153, 0.3);">
-                        00:00:00
-                    </span>
+                    <!-- 移动菜单按钮 -->
+                    <button class="md:hidden">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                            class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
                 </div>
-        
-                <div class="flex flex-col items-center space-y-2 p-4 bg-gray-800/80 rounded-lg shadow-inner-xl transform hover:scale-105 transition duration-300 w-full md:w-auto">
-                    <span class="font-bold text-gray-400 text-xs uppercase tracking-wider">北京时间 (BJT) - UTC+8</span>
-                    <span 
-                        id="bjt-time" 
-                        class="text-amber-400 text-5xl md:text-6xl font-digital drop-shadow-lg"
-                        style="text-shadow: 0 0 10px rgba(251, 191, 36, 0.7), 0 0 20px rgba(251, 191, 36, 0.3);">
-                        00:00:00
-                    </span>
-                </div>
-        
             </div>
         </div>
+    </nav>
 
-        <section class="py-10">
-            <h2 class="text-4xl font-extrabold text-gray-800 mb-12 text-center">
-                🛠️ 核心工具
-            </h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                
-                <a href="sun.html" class="group block bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 border-b-4 border-ham-blue transform hover:-translate-y-1">
-                    <h3 class="text-xl font-semibold text-gray-900 mb-2 group-hover:text-ham-blue">☀️ 传播预测</h3>
-                    <p class="text-gray-600 text-sm">查看太阳活动和电离层数据，预测短波通联条件。</p>
-                </a>
-                
-                <a href="https://repeater.quickso.cn/" target="_blank" class="group block bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 border-b-4 border-green-500 transform hover:-translate-y-1">
-                    <h3 class="text-xl font-semibold text-gray-900 mb-2 group-hover:text-green-600">🗺️ 中继地图</h3>
-                    <p class="text-gray-600 text-sm">全国业余无线电中继台的地理位置和详细参数查询。</p>
-                </a>
-                
-                <a href="https://www.heavens-above.com/AmateurSats.aspx?lat=0&lng=0&loc=Unspecified&alt=0&tz=UCT" target="_blank" class="group block bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 border-b-4 border-purple-500 transform hover:-translate-y-1">
-                    <h3 class="text-xl font-semibold text-gray-900 mb-2 group-hover:text-purple-600">🛰️ 卫星追踪</h3>
-                    <p class="text-gray-600 text-sm">查询业余无线电卫星的过境时间和轨道信息。</p>
-                </a>
-                
-                <a href="https://cw.quickso.cn" target="_blank" class="group block bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 border-b-4 border-red-500 transform hover:-translate-y-1">
-                    <h3 class="text-xl font-semibold text-gray-900 mb-2 group-hover:text-red-600">• — CW 练习</h3>
-                    <p class="text-gray-600 text-sm">在线摩尔斯电码（CW）收听和发送练习工具。</p>
-                </a>
 
-                <div class="bg-white p-6 rounded-xl shadow-lg border-l-4 border-blue-400">
-                    <h3 class="text-xl font-semibold text-gray-900 mb-3">📍 常用查询/地图</h3>
-                    <ul class="space-y-2 text-sm">
-                        <li><a class="text-gray-700 hover:text-blue-600 transition" href="https://forum.hamcq.cn/relay" target="_blank">业余无线电中继查询</a></li>
-                        <li><a class="text-gray-700 hover:text-blue-600 transition" href="https://qth.quickso.cn/" target="_blank">梅登黑德网格定位</a></li>
-                        <li><a class="text-gray-700 hover:text-blue-600 transition" href="https://aprs.tv/" target="_blank">APRS地图</a></li>
-                        <li><a class="text-gray-700 hover:text-blue-600 transition" href="https://www.receiverbook.de/map" target="_blank">SDR地图</a></li>
-                    </ul>
-                </div>
 
-                <div class="bg-white p-6 rounded-xl shadow-lg border-l-4 border-orange-400">
-                    <h3 class="text-xl font-semibold text-gray-900 mb-3">📝 考试/电台管理</h3>
-                    <ul class="space-y-2 text-sm">
-                        <li><a class="text-gray-700 hover:text-orange-600 transition" href="https://www.cqid.cn/" target="_blank">模拟考试</a></li>
-                        <li><a class="text-gray-700 hover:text-orange-600 transition" href="http://82.157.138.16:8091/CRAC/crac/index.html" target="_blank">能力验证及信息管理系统 (CRAC)</a></li>
-                    </ul>
-                </div>
-
-                <div class="bg-white p-6 rounded-xl shadow-lg border-l-4 border-green-400">
-                    <h3 class="text-xl font-semibold text-gray-900 mb-3">📡 卫星/解码/短波</h3>
-                    <ul class="space-y-2 text-sm">
-                        <li><a class="text-gray-700 hover:text-green-600 transition" href="http://amsat.org.ar/pass.htm" target="_blank">卫星过境查询</a></li>
-                        <li><a class="text-gray-700 hover:text-green-600 transition" href="https://noaa.quickso.cn/" target="_blank">NOAA解码</a></li>
-                        <li><a class="text-gray-700 hover:text-green-600 transition" href="http://www.short-wave.info/" target="_blank">短波广播查询</a></li>
-                    </ul>
-                </div>
-
-                <div class="bg-white p-6 rounded-xl shadow-lg border-l-4 border-red-400">
-                    <h3 class="text-xl font-semibold text-gray-900 mb-3">📻 CW/SDR 在线工具</h3>
-                    <ul class="space-y-2 text-sm">
-                        <li><a class="text-gray-700 hover:text-red-600 transition" href="https://muzihuaner.github.io/Morse-Code-Translation/" target="_blank">CW翻译</a></li>
-                        <li><a class="text-gray-700 hover:text-red-600 transition" href="https://radio.quickso.cn/" target="_blank">SDR网页客户端</a></li>
-                        <li><a class="text-gray-700 hover:text-red-600 transition" href="https://k5.vicicode.cn/" target="_blank">K5Web在线工具</a></li>
-                    </ul>
-                </div>
-                
+    <!-- Hero 区域 -->
+    <section class="hero-gradient pt-28 pb-20 px-4 min-h-screen flex flex-col justify-center">
+        <div class="max-w-7xl mx-auto w-full">
+            <div class="text-center space-y-8">
+                <h1 class="text-6xl md:text-7xl font-bold text-gray-900 leading-tight">
+                    快点HAM工具箱
+                </h1>
+                <p class="text-xl md:text-2xl text-gray-600 max-w-2xl mx-auto font-light">
+                    一站式业余无线电爱好者平台。查询、追踪、练习、探索——助力你的每一次 CQ！
+                </p>
+                <!-- <div class="flex flex-col sm:flex-row gap-4 justify-center pt-8">
+                    <button class="btn-apple px-8 py-3 text-lg font-medium">立即探索</button>
+                    <button class="btn-apple-outline px-8 py-3 text-lg font-medium">了解更多</button>
+                </div> -->
             </div>
-        </section>
+        </div>
+    </section>
 
-        <section class="mt-20 py-8 border-t border-gray-200">
-            <h3 class="text-3xl font-bold text-gray-800 mb-8 text-center">🤝 友情链接与权威资源</h3>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-5xl mx-auto">
-                
-                <div class="bg-white p-6 rounded-xl shadow-lg border-l-4 border-ham-blue">
-                    <h4 class="text-xl font-semibold text-ham-blue mb-4 flex items-center">
-                        <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
-                        官方机构与国际联盟
-                    </h4>
-                    <ul class="space-y-3">
-                        <li class="group">
-                            <a class="block text-gray-700 hover:text-ham-orange transition-colors font-medium relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-ham-orange" href="https://www.iaru.org/" target="_blank">国际业余无线电联盟 (IARU)</a>
-                        </li>
-                        <li class="group">
-                            <a class="block text-gray-700 hover:text-ham-orange transition-colors font-medium relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-ham-orange" href="http://www.iaru-r3.org/" target="_blank">国际业余无线电联盟三区 (IARU R3)</a>
-                        </li>
-                        <li class="group">
-                            <a class="block text-gray-700 hover:text-ham-orange transition-colors font-medium relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-ham-orange" href="http://www.miit.gov.cn/" target="_blank">中华人民共和国工业和信息化部 (MIIT)</a>
-                        </li>
-                        <li class="group">
-                            <a class="block text-gray-700 hover:text-ham-orange transition-colors font-medium relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-ham-orange" href="http://www.rachina.org.cn/" target="_blank">中国无线电协会 (RACHNA)</a>
-                        </li>
-                        <li class="group">
-                            <a class="block text-gray-700 hover:text-ham-orange transition-colors font-medium relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-ham-orange" href="http://www.crac.org.cn/" target="_blank">中国无线电协会业余无线电分会 (CRAC)</a>
-                        </li>
-                    </ul>
+    <!-- 时间显示组件 -->
+    <div class="py-8 px-4 md:px-8 bg-white border-b border-gray-200">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+
+                <!-- UTC 时间 -->
+                <div class="group">
+                    <div
+                        class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-6 md:p-8 border border-gray-200 hover:border-blue-300 transition-all duration-300 hover:shadow-lg hover:shadow-blue-100/50">
+                        <div class="flex items-center justify-between mb-6">
+                            <div>
+                                <p class="text-gray-600 text-sm font-medium tracking-wide">世界时</p>
+                                <p class="text-gray-900 text-lg font-semibold mt-1">UTC (Zulu)</p>
+                            </div>
+                            <div class="text-3xl">🌍</div>
+                        </div>
+                        <div class="text-center">
+                            <span id="utc-time"
+                                class="text-5xl md:text-6xl font-digital font-semibold text-blue-600 tracking-wide">03:20:34</span>
+                            <p class="text-gray-500 text-xs font-medium mt-3 uppercase tracking-wider">国际协调时间</p>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="bg-white p-6 rounded-xl shadow-lg border-l-4 border-ham-orange">
-                    <h4 class="text-xl font-semibold text-ham-orange mb-4 flex items-center">
-                        <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5m-5 0a2 2 0 100-4m0 4a2 2 0 01-2 2H3a2 2 0 00-2 2V9a2 2 0 012-2h12a2 2 0 012 2v10m-2 0h-5a2 2 0 01-2-2m-2-7h3m-3 4h3"></path></svg>
-                        HAM 社区与技术资源
-                    </h4>
-                    <ul class="space-y-3">
-                        <li class="group">
-                            <a class="block text-gray-700 hover:text-ham-blue transition-colors font-medium relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-ham-blue" href="https://www.qrz.com/" target="_blank">QRZ.com (全球呼号查询)</a>
-                        </li>
-                        <li class="group">
-                            <a class="block text-gray-700 hover:text-ham-blue transition-colors font-medium relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-ham-blue" href="http://www.qrz.cn/home" target="_blank">QRZ中国</a>
-                        </li>
-                        <li class="group">
-                            <a class="block text-gray-700 hover:text-ham-blue transition-colors font-medium relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-ham-blue" href="https://forum.hamcq.cn/" target="_blank">HamCQ 社区</a>
-                        </li>
-                        <li class="group">
-                            <a class="block text-gray-700 hover:text-ham-blue transition-colors font-medium relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-ham-blue" href="http://bbs.cqcqcq.com/" target="_blank">中国业余无线电论坛 (CQCQCQ)</a>
-                        </li>
-                        <li class="group">
-                            <a class="block text-gray-700 hover:text-ham-blue transition-colors font-medium relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-ham-blue" href="https://www.hellocq.net/forum/" target="_blank">哈罗CQ火腿社区</a>
-                        </li>
-                        <li class="group">
-                            <a class="block text-gray-700 hover:text-ham-blue transition-colors font-medium relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-ham-blue" href="https://www.dxzone.com/" target="_blank">DXZONE (DX 资源)</a>
-                        </li>
-                        <li class="group">
-                            <a class="block text-gray-700 hover:text-ham-blue transition-colors font-medium relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-ham-blue" href="https://hamwaves.com/" target="_blank">Hamwaves (技术资料)</a>
-                        </li>
-                    </ul>
+                <!-- 北京时间 -->
+                <div class="group">
+                    <div
+                        class="bg-gradient-to-br from-blue-50 to-blue-100/50 rounded-2xl p-6 md:p-8 border border-blue-200 hover:border-blue-400 transition-all duration-300 hover:shadow-lg hover:shadow-blue-200/50">
+                        <div class="flex items-center justify-between mb-6">
+                            <div>
+                                <p class="text-blue-700 text-sm font-medium tracking-wide">本地时间</p>
+                                <p class="text-blue-900 text-lg font-semibold mt-1">北京时间 (BJT)</p>
+                            </div>
+                            <div class="text-3xl">🇨🇳</div>
+                        </div>
+                        <div class="text-center">
+                            <span id="bjt-time"
+                                class="text-5xl md:text-6xl font-digital font-semibold text-blue-600 tracking-wide">11:20:34</span>
+                            <p class="text-blue-600 text-xs font-medium mt-3 uppercase tracking-wider">UTC+8 时区</p>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="bg-white p-6 rounded-xl shadow-lg border-l-4 ">
-                    <h4 class="text-xl font-semibold text-ham-purple mb-4 flex items-center">
-                        <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5m-5 0a2 2 0 100-4m0 4a2 2 0 01-2 2H3a2 2 0 00-2 2V9a2 2 0 012-2h12a2 2 0 012 2v10m-2 0h-5a2 2 0 01-2-2m-2-7h3m-3 4h3"></path></svg>
-                        关于项目
-                    </h4>
-                    <ul class="space-y-3">
-                        <li class="group">
-                            <a class="block text-gray-700 hover:text-ham-blue transition-colors font-medium relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-ham-blue" href="https://github.com/muzihuaner/ham-tools" target="_blank">Github</a>
-                        </li>
-                        <li class="group">
-                            <a class="block text-gray-700 hover:text-ham-blue transition-colors font-medium relative pl-5 before:content-['•'] before:absolute before:left-0 before:text-ham-blue" href="https://huangetech.github.io/" target="_blank">HuanGeTech</a>
-                        </li>
+            </div>
+        </div>
+    </div>
+
+    <!-- CTA 区域 -->
+    <section class="py-20 px-4 bg-black text-white">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center space-y-8 mb-16">
+                <h2 class="text-5xl md:text-6xl font-bold">
+                    开始探索无线电的世界
+                </h2>
+                <p class="text-xl text-gray-300 font-light">
+                    加入全球业余无线电爱好者社区，获取最新的工具和资源
+                </p>
+            </div>
+
+            <!-- 友情链接与权威资源 -->
+            <div class="border-t border-gray-700 pt-16">
+                <h3 class="text-3xl font-bold text-center mb-12">🤝 友情链接与权威资源</h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+                    <!-- 官方机构 -->
+                    <div
+                        class="bg-gray-900 p-6 rounded-2xl border border-gray-800 hover:border-blue-500/50 transition-colors duration-300">
+                        <h4 class="text-xl font-semibold text-blue-400 mb-4 flex items-center">
+                            <span class="text-2xl mr-3">🏛️</span>
+                            官方机构
+                        </h4>
+                        <ul class="space-y-3">
+                            <li>
+                                <a class="text-gray-300 hover:text-white transition-colors text-sm"
+                                    href="https://www.iaru.org/" target="_blank">
+                                    → 国际业余无线电联盟 (IARU)
+                                </a>
+                            </li>
+                            <li>
+                                <a class="text-gray-300 hover:text-white transition-colors text-sm"
+                                    href="http://www.iaru-r3.org/" target="_blank">
+                                    → IARU 三区
+                                </a>
+                            </li>
+                            <li>
+                                <a class="text-gray-300 hover:text-white transition-colors text-sm"
+                                    href="http://www.rachina.org.cn/" target="_blank">
+                                    → 中国无线电协会
+                                </a>
+                            </li>
+                            <li>
+                                <a class="text-gray-300 hover:text-white transition-colors text-sm"
+                                    href="http://www.crac.org.cn/" target="_blank">
+                                    → CRAC 业余无线电分会
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- HAM 社区 -->
+                    <div
+                        class="bg-gray-900 p-6 rounded-2xl border border-gray-800 hover:border-blue-500/50 transition-colors duration-300">
+                        <h4 class="text-xl font-semibold text-blue-400 mb-4 flex items-center">
+                            <span class="text-2xl mr-3">👥</span>
+                            HAM 社区
+                        </h4>
+                        <ul class="space-y-3">
+
+                            <li>
+                                <a class="text-gray-300 hover:text-white transition-colors text-sm"
+                                    href="https://forum.hamcq.cn/" target="_blank">
+                                    → HamCQ 社区
+                                </a>
+                            </li>
+                            <li>
+                                <a class="text-gray-300 hover:text-white transition-colors text-sm"
+                                    href="https://www.hellocq.net/forum/" target="_blank">
+                                    → 哈罗CQ火腿社区
+                                </a>
+                            </li>
+
+                            <li>
+                                <a class="text-gray-300 hover:text-white transition-colors text-sm"
+                                    href="http://bbs.cqcqcq.com/" target="_blank">
+                                    → CQCQCQ 无线电论坛
+                                </a>
+                            </li>
+                            <li>
+                                <a class="text-gray-300 hover:text-white transition-colors text-sm"
+                                    href="http://www.qrz.cn/" target="_blank">
+                                    → QRZ中国
+                                </a>
+                            </li>
+                            <li>
+                                <a class="text-gray-300 hover:text-white transition-colors text-sm"
+                                    href="https://qlham.com/" target="_blank">
+                                    → 齐鲁HAM网
+                                </a>
+                            </li>
+                            <li>
+                                <a class="text-gray-300 hover:text-white transition-colors text-sm"
+                                    href="https://www.qsl.net/" target="_blank">
+                                    → QRZ.NET
+                                </a>
+                            </li>
+                            <li>
+                                <a class="text-gray-300 hover:text-white transition-colors text-sm"
+                                    href="https://www.reddit.com/r/HamRadio/" target="_blank">
+                                    → Reddit r/HamRadio
+                                </a>
+                            </li>
+
+                            <li>
+                                <a class="text-gray-300 hover:text-white transition-colors text-sm"
+                                    href="http://www.bjwxdxh.org.cn/" target="_blank">
+                                    → 北京无线电协会
+                                </a>
+                            </li>
+                            <li>
+                                <a class="text-gray-300 hover:text-white transition-colors text-sm"
+                                    href="https://www.ragd.org.cn/" target="_blank">
+                                    → 广东无线电协会
+                                </a>
+                            </li>
+                            <li>
+                                <a class="text-gray-300 hover:text-white transition-colors text-sm"
+                                    href="http://www.sara.org.cn/" target="_blank">
+                                    → 上海业余无线电协会
+                                </a>
+                            </li>
+
+                            <li>
+                                <a class="text-gray-300 hover:text-white transition-colors text-sm"
+                                    href="https://www.tjara.org/" target="_blank">
+                                    → 天津无线电协会
+                                </a>
+                            </li>
+                             <li>
+                                <a class="text-gray-300 hover:text-white transition-colors text-sm"
+                                    href="http://www.scraa.org.cn/" target="_blank">
+                                    → 四川无线电协会
+                                </a>
+                            </li>
+
+                        </ul>
+                    </div>
+
+                    <!-- 技术资源 -->
+                    <div
+                        class="bg-gray-900 p-6 rounded-2xl border border-gray-800 hover:border-blue-500/50 transition-colors duration-300">
+                        <h4 class="text-xl font-semibold text-blue-400 mb-4 flex items-center">
+                            <span class="text-2xl mr-3">📚</span>
+                            技术资源
+                        </h4>
+                        <ul class="space-y-3">
+                            <li>
+                                <a class="text-gray-300 hover:text-white transition-colors text-sm"
+                                    href="https://hamwaves.com/" target="_blank">
+                                    → Hamwaves 技术库
+                                </a>
+                            </li>
+
+                            <li>
+                                <a class="text-gray-300 hover:text-white transition-colors text-sm"
+                                    href="https://www.dxzone.com/" target="_blank">
+                                    → DXZONE DX 资源
+                                </a>
+                            </li>
+
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="bg-gray-900 text-gray-300 border-t border-gray-800 py-16 px-4">
+        <div class="max-w-7xl mx-auto">
+            <!-- 页脚主内容 -->
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-12 mb-12">
+
+                <!-- 品牌信息 -->
+                <div class="md:col-span-2">
+                    <div class="space-y-6">
+                        <!-- 品牌头部 -->
+                        <div>
+                            <div class="flex items-center space-x-3 mb-3">
+                                <div class="text-4xl">📡</div>
+                                <div>
+                                    <span class="text-2xl font-bold text-white">HAM Tools</span>
+                                    <p class="text-xs text-gray-500 mt-1">快点业余无线电工具箱</p>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-400 max-w-md">一站式业余无线电爱好者平台，致力于为全球HAM提供便捷的工具和资源服务。</p>
+                        </div>
                         
-                    </ul>
+                        <!-- 快速链接 -->
+                        <div class="grid grid-cols-2 gap-4 pt-4">
+                            <div>
+                                <p class="text-xs font-semibold text-gray-300 uppercase tracking-wider mb-3">快速链接</p>
+                                <ul class="space-y-2">
+                                    <li>
+                                        <a href="https://github.com/muzihuaner/ham-tools" target="_blank" 
+                                           class="text-sm text-gray-400 hover:text-blue-400 transition-colors duration-200">
+                                            → 项目仓库
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="https://github.com/muzihuaner/ham-tools/issues" target="_blank"
+                                           class="text-sm text-gray-400 hover:text-blue-400 transition-colors duration-200">
+                                            → 反馈问题
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div>
+                                <p class="text-xs font-semibold text-gray-300 uppercase tracking-wider mb-3">支持</p>
+                                <ul class="space-y-2">
+                                    <li>
+                                        <a href="https://pay.quickso.cn" target="_blank"
+                                           class="text-sm text-gray-400 hover:text-orange-400 transition-colors duration-200">
+                                            → 支持我们 💖
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="mailto:admin@huangeteh.com"
+                                           class="text-sm text-gray-400 hover:text-blue-400 transition-colors duration-200">
+                                            → 联系我们
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500">免责声明：本网站所含外部链接资源均由第三方提供，本站不承担任何法律责任。如有侵权或不当内容，请联系我们删除。</p>
+                        </div>
+                    </div>
                 </div>
-                
             </div>
-        </section>
 
-    </main>
-
-    <footer class="bg-gray-900 text-white mt-12">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
-            <p class="text-sm mb-2">&copy; <span id="current-year"></span> 快点HAM工具箱. All rights reserved.</p>
-            <p class="text-xs text-gray-500">免责声明：本网站所含外部链接资源均由第三方提供，本站不承担任何法律责任。</p>
+            <!-- 页脚底部 -->
+            <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-sm">
+                <p class="text-gray-400">© 2026 快点业余无线电工具箱. All rights reserved.</p>
+            </div>
         </div>
     </footer>
 
     <script>
-        // 自动更新页脚年份
-        document.getElementById('current-year').textContent = new Date().getFullYear();
+        // 导航栏下拉菜单点击动画和交互
+        document.querySelectorAll('.nav-dropdown').forEach(dropdown => {
+            const link = dropdown.querySelector('.nav-link');
+            const dropdownContent = dropdown.querySelector('.dropdown-content');
 
-        // 实时时钟功能
-        function updateClocks() {
+            // 点击菜单项打开/关闭
+            link.addEventListener('click', function (e) {
+                // 仅当有下拉菜单内容时，才阻止默认行为
+                if (dropdownContent) {
+                    e.preventDefault();
+
+                    // 关闭其他菜单
+                    document.querySelectorAll('.nav-dropdown').forEach(d => {
+                        if (d !== dropdown) {
+                            d.classList.remove('active');
+                        }
+                    });
+
+                    // 切换当前菜单
+                    dropdown.classList.toggle('active');
+                }
+                // 否则让链接正常工作
+            });
+
+            // 菜单项链接功能
+            const items = dropdown.querySelectorAll('.dropdown-item');
+            items.forEach(item => {
+                item.addEventListener('click', function (e) {
+                    // 如果有实际链接，会自动跳转
+                    dropdown.classList.remove('active');
+                });
+            });
+        });
+
+        // 点击外部关闭菜单
+        document.addEventListener('click', function (e) {
+            if (!e.target.closest('.nav-dropdown')) {
+                document.querySelectorAll('.nav-dropdown').forEach(d => {
+                    d.classList.remove('active');
+                });
+            }
+        });
+
+        // 平滑滚动导航
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                if (!this.closest('.nav-dropdown')) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }
+            });
+        });
+
+        // 实时更新世界时间
+        function updateWorldTime() {
             const now = new Date();
-            
-            // 1. UTC 时间
-            const utcHours = now.getUTCHours().toString().padStart(2, '0');
-            const utcMinutes = now.getUTCMinutes().toString().padStart(2, '0');
-            const utcSeconds = now.getUTCSeconds().toString().padStart(2, '0');
+
+            // UTC 时间
+            const utcHours = String(now.getUTCHours()).padStart(2, '0');
+            const utcMinutes = String(now.getUTCMinutes()).padStart(2, '0');
+            const utcSeconds = String(now.getUTCSeconds()).padStart(2, '0');
             document.getElementById('utc-time').textContent = `${utcHours}:${utcMinutes}:${utcSeconds}`;
 
-            // 2. 北京时间 (BJT) UTC+8
-            // 使用 toLocaleTimeString 进行准确的本地时区转换
-            const bjtTimeOptions = {
-                hour: '2-digit', 
-                minute: '2-digit', 
-                second: '2-digit', 
-                hour12: false, 
-                timeZone: 'Asia/Shanghai' // 中国大陆时区
-            };
-            // 兼容性回退: 如果浏览器不支持 timeZone 选项, 则使用旧的计算方式
-            let bjtTimeStr;
-            try {
-                 bjtTimeStr = now.toLocaleTimeString('zh-CN', bjtTimeOptions);
-            } catch (e) {
-                 // 旧的计算方式
-                 const bjtHours = (now.getUTCHours() + 8) % 24;
-                 const bjtMinutes = now.getUTCMinutes().toString().padStart(2, '0');
-                 const bjtSeconds = now.getUTCSeconds().toString().padStart(2, '0');
-                 bjtTimeStr = `${bjtHours.toString().padStart(2, '0')}:${bjtMinutes}:${bjtSeconds}`;
-            }
-
-            document.getElementById('bjt-time').textContent = bjtTimeStr;
+            // 北京时间 (UTC+8)
+            const bjtDate = new Date(now.getTime() + 8 * 60 * 60 * 1000);
+            const bjtHours = String(bjtDate.getUTCHours()).padStart(2, '0');
+            const bjtMinutes = String(bjtDate.getUTCMinutes()).padStart(2, '0');
+            const bjtSeconds = String(bjtDate.getUTCSeconds()).padStart(2, '0');
+            document.getElementById('bjt-time').textContent = `${bjtHours}:${bjtMinutes}:${bjtSeconds}`;
         }
 
-        // 每秒更新时钟
-        setInterval(updateClocks, 1000);
-        // 首次加载时调用一次
-        updateClocks();
+        // 初始化时间显示并每秒更新
+        updateWorldTime();
+        setInterval(updateWorldTime, 1000);
     </script>
-
 </body>
+
 </html>

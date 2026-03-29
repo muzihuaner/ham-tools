@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>短波频率表与频谱划分 - 快点HAM工具箱</title>
+    <meta name="description" content="业余无线电短波常用频率参考及无线电频谱频段划分详解。" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap');
+
+        * {
+            font-family: 'Noto Sans SC', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        * {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: #f5f5f7;
+        }
+
+        main {
+            min-height: 100vh;
+            padding: 2rem 1rem;
+        }
+
+        .ceo-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        /* 卡片样式 */
+        .freq-card,
+        .science-card {
+            background: white;
+            border: 1px solid #e5e5e7;
+            border-radius: 1.5rem;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .freq-card:hover,
+        .science-card:hover {
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+            border-color: #d0d0d0;
+        }
+
+        /* 标题样式 */
+        .freq-card h3,
+        .science-card h3 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #000000;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .freq-card h3 span,
+        .science-card h3 span {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #0071e3;
+            background: #f0f7ff;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            margin-left: auto;
+        }
+
+        .science-card h4 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #000000;
+            margin-top: 1.5rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .science-card p {
+            font-size: 0.95rem;
+            line-height: 1.8;
+            color: #666666;
+            margin-bottom: 1rem;
+        }
+
+        .science-card ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .science-card li {
+            margin-bottom: 0.8rem;
+            line-height: 1.8;
+            color: #666666;
+        }
+
+        /* 表格样式 */
+        .table-wrapper {
+            margin: 1.5rem 0;
+            overflow-x: auto;
+        }
+
+        .table-responsive {
+            min-width: 100%;
+        }
+
+        .freq-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .freq-table thead {
+            background: linear-gradient(135deg, #f5f5f7 0%, #ffffff 100%);
+            border-bottom: 2px solid #e5e5e7;
+        }
+
+        .freq-table th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: #000000;
+            white-space: nowrap;
+        }
+
+        .freq-table td {
+            padding: 0.8rem 1rem;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .band-odd {
+            background-color: #ffffff;
+        }
+
+        .band-even {
+            background-color: #fafafa;
+        }
+
+        .freq-table tbody tr:hover {
+            background-color: #f0f7ff !important;
+        }
+
+        /* 表格内容样式 */
+        .band {
+            font-weight: 600;
+            color: #0071e3;
+        }
+
+        .freq {
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            color: #000000;
+        }
+
+        .mode-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #0071e3 0%, #0056b3 100%);
+            color: white;
+            padding: 0.3rem 0.6rem;
+            border-radius: 0.3rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .time {
+            color: #666666;
+            font-size: 0.9rem;
+        }
+
+        .remark {
+            color: #999999;
+            font-size: 0.9rem;
+            font-style: italic;
+        }
+
+        .band-name {
+            font-weight: 600;
+            color: #000000;
+        }
+
+        .freq-range {
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+
+        .wavelength-range {
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+
+        .key-prop {
+            color: #666666;
+            font-size: 0.9rem;
+        }
+
+        .apps {
+            font-size: 0.9rem;
+            color: #666666;
+        }
+
+        /* 页脚注 */
+        .table-footer-note {
+            background: linear-gradient(135deg, #f0f7ff 0%, #ffffff 100%);
+            border-left: 4px solid #0071e3;
+            padding: 1.2rem;
+            border-radius: 0.8rem;
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            color: #666666;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        /* 图片容器 */
+        .img-container {
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .img-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 1rem;
+            border: 1px solid #e5e5e7;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .img-container figcaption {
+            margin-top: 0.8rem;
+            font-size: 0.9rem;
+            color: #999999;
+            font-style: italic;
+        }
+
+        /* Badge */
+        .badge-light {
+            display: inline-block;
+            background: #0071e3;
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 0.3rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-right: 0.5rem;
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .freq-card,
+            .science-card {
+                padding: 1.5rem;
+            }
+
+            .freq-card h3,
+            .science-card h3 {
+                font-size: 1.4rem;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .freq-card h3 span,
+            .science-card h3 span {
+                margin-left: 0;
+                margin-top: 0.5rem;
+            }
+
+            .freq-table {
+                font-size: 0.8rem;
+            }
+
+            .freq-table th,
+            .freq-table td {
+                padding: 0.6rem 0.4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="main">
+        <section class="ceo-container container">
+
+            <!-- ========== 第一部分：短波频率表 ========== -->
+            <div class="freq-card">
+                <h3>📡 业余无线电短波常用频率参考 <span>可存储于电台频道</span></h3>
+
+                <div class="table-wrapper">
+                    <div class="table-responsive">
+                        <table class="freq-table">
+                            <thead>
+                                <tr>
+                                    <th>波段</th>
+                                    <th>频率 (MHz)</th>
+                                    <th>模式</th>
+                                    <th>时段</th>
+                                    <th>备注</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="band-odd">
+                                    <td class="band" rowspan="2">80米</td>
+                                    <td class="freq">3.596</td>
+                                    <td class="mode"><span class="mode-badge">CW</span></td>
+                                    <td class="time">夜间</td>
+                                    <td class="remark">冬季</td>
+                                </tr>
+                                <tr class="band-odd">
+                                    <td class="freq">3.850</td>
+                                    <td class="mode"><span class="mode-badge">LSB</span></td>
+                                    <td class="time">夜间</td>
+                                    <td class="remark">冬季</td>
+                                </tr>
+                                <tr class="band-even">
+                                    <td class="band" rowspan="11">40米</td>
+                                    <td class="freq">7.00815</td>
+                                    <td class="mode"><span class="mode-badge">CW</span></td>
+                                    <td class="time">早晨</td>
+                                    <td class="remark">中秋节早7:15-8:15台网点名</td>
+                                </tr>
+                                <tr class="band-even">
+                                    <td class="freq">7.0168</td>
+                                    <td class="mode"><span class="mode-badge">CW</span></td>
+                                    <td class="time">早晨</td>
+                                    <td class="remark">周六早6:30-7:30台网点名</td>
+                                </tr>
+                                <tr class="band-even">
+                                    <td class="freq">7.023</td>
+                                    <td class="mode"><span class="mode-badge">CW</span></td>
+                                    <td class="time">早晨、傍晚、夜间</td>
+                                    <td class="remark">40米CW乐园</td>
+                                </tr>
+                                <tr class="band-even">
+                                    <td class="freq">7.050</td>
+                                    <td class="mode"><span class="mode-badge">LSB</span></td>
+                                    <td class="time">早晨、傍晚、夜间</td>
+                                    <td class="remark">40米菜市场</td>
+                                </tr>
+                                <tr class="band-even">
+                                    <td class="freq">7.053</td>
+                                    <td class="mode"><span class="mode-badge">LSB</span></td>
+                                    <td class="time">早晨、傍晚、夜间</td>
+                                    <td class="remark">周日早7:00-10:00台网点名</td>
+                                </tr>
+                                <tr class="band-even">
+                                    <td class="freq">7.055</td>
+                                    <td class="mode"><span class="mode-badge">LSB</span></td>
+                                    <td class="time">早晨、傍晚、夜间</td>
+                                    <td class="remark">周六晚18:00-20:00台网点名</td>
+                                </tr>
+                                <tr class="band-even">
+                                    <td class="freq">7.060</td>
+                                    <td class="mode"><span class="mode-badge">LSB</span></td>
+                                    <td class="time">早晨、傍晚、夜间</td>
+                                    <td class="remark">周六早7:00-9:00台网点名</td>
+                                </tr>
+                                <tr class="band-even">
+                                    <td class="freq">7.065</td>
+                                    <td class="mode"><span class="mode-badge">LSB</span></td>
+                                    <td class="time">早晨、傍晚、夜间</td>
+                                    <td class="remark">周日早7:30-9:00台网点名</td>
+                                </tr>
+                                <tr class="band-even">
+                                    <td class="freq">7.068</td>
+                                    <td class="mode"><span class="mode-badge">LSB</span></td>
+                                    <td class="time">早晨</td>
+                                    <td class="remark">周六早6:00-9:00台网点名</td>
+                                </tr>
+                                <tr class="band-even">
+                                    <td class="freq">7.0815</td>
+                                    <td class="mode"><span class="mode-badge">LSB</span></td>
+                                    <td class="time">早晨</td>
+                                    <td class="remark">中秋节早6:15-9:30台网点名</td>
+                                </tr>
+                                <tr class="band-even">
+                                    <td class="freq">7.140</td>
+                                    <td class="mode"><span class="mode-badge">LSB</span></td>
+                                    <td class="time">早晨、傍晚、夜间</td>
+                                    <td class="remark">日本40米菜市场</td>
+                                </tr>
+                                <tr class="band-odd">
+                                    <td class="band" rowspan="15">20米</td>
+                                    <td class="freq">14.00815</td>
+                                    <td class="mode"><span class="mode-badge">CW</span></td>
+                                    <td class="time">早晨</td>
+                                    <td class="remark">中秋节早7:15-8:30台网点名</td>
+                                </tr>
+                                <tr class="band-odd">
+                                    <td class="freq">14.023</td>
+                                    <td class="mode"><span class="mode-badge">CW</span></td>
+                                    <td class="time">白天、傍晚</td>
+                                    <td class="remark">20米CW</td>
+                                </tr>
+                                <tr class="band-odd">
+                                    <td class="freq">14.068</td>
+                                    <td class="mode"><span class="mode-badge">CW</span></td>
+                                    <td class="time">早晨</td>
+                                    <td class="remark">周六早7:00-8:00台网点名</td>
+                                </tr>
+                                <tr class="band-odd">
+                                    <td class="freq">14.168</td>
+                                    <td class="mode"><span class="mode-badge">USB</span></td>
+                                    <td class="time">早晨</td>
+                                    <td class="remark">周六早8:00-10:00台网点名</td>
+                                </tr>
+                                <tr class="band-odd">
+                                    <td class="freq">14.180</td>
+                                    <td class="mode"><span class="mode-badge">USB</span></td>
+                                    <td class="time">早晨</td>
+                                    <td class="remark">每天早8:00-9:00老HAM活跃</td>
+                                </tr>
+                                <tr class="band-odd">
+                                    <td class="freq">14.205</td>
+                                    <td class="mode"><span class="mode-badge">USB</span></td>
+                                    <td class="time">白天、傍晚</td>
+                                    <td class="remark">日本20米菜市场</td>
+                                </tr>
+                                <tr class="band-odd">
+                                    <td class="freq">14.253</td>
+                                    <td class="mode"><span class="mode-badge">USB</span></td>
+                                    <td class="time">早晨</td>
+                                    <td class="remark">周日早8:30-10:00台网点名</td>
+                                </tr>
+                                <tr class="band-odd">
+                                    <td class="freq">14.260</td>
+                                    <td class="mode"><span class="mode-badge">USB</span></td>
+                                    <td class="time">白天、傍晚</td>
+                                    <td class="remark">/</td>
+                                </tr>
+                                <tr class="band-odd">
+                                    <td class="freq">14.265</td>
+                                    <td class="mode"><span class="mode-badge">USB</span></td>
+                                    <td class="time">白天、傍晚</td>
+                                    <td class="remark">/</td>
+                                </tr>
+                                <tr class="band-odd">
+                                    <td class="freq">14.270</td>
+                                    <td class="mode"><span class="mode-badge">USB</span></td>
+                                    <td class="time">白天、傍晚</td>
+                                    <td class="remark">20米菜市场</td>
+                                </tr>
+                                <tr class="band-odd">
+                                    <td class="freq">14.275</td>
+                                    <td class="mode"><span class="mode-badge">USB</span></td>
+                                    <td class="time">白天、傍晚</td>
+                                    <td class="remark">/</td>
+                                </tr>
+                                <tr class="band-odd">
+                                    <td class="freq">14.280</td>
+                                    <td class="mode"><span class="mode-badge">USB</span></td>
+                                    <td class="time">白天、傍晚</td>
+                                    <td class="remark">/</td>
+                                </tr>
+                                <tr class="band-odd">
+                                    <td class="freq">14.2815</td>
+                                    <td class="mode"><span class="mode-badge">USB</span></td>
+                                    <td class="time">白天、傍晚</td>
+                                    <td class="remark">中秋节早7:15-9:15台网点名</td>
+                                </tr>
+                                <tr class="band-odd">
+                                    <td class="freq">14.330</td>
+                                    <td class="mode"><span class="mode-badge">USB</span></td>
+                                    <td class="time">早晨、白天、傍晚</td>
+                                    <td class="remark">中国无线电运动协会CRSA</td>
+                                </tr>
+                                <tr class="band-odd">
+                                    <td class="freq">15.000</td>
+                                    <td class="mode"><span class="mode-badge">AM</span></td>
+                                    <td class="time">09:00-17:00</td>
+                                    <td class="remark">BPM授时台</td>
+                                </tr>
+                                <tr class="band-even">
+                                    <td class="band" rowspan="3">15米</td>
+                                    <td class="freq">21.023</td>
+                                    <td class="mode"><span class="mode-badge">CW</span></td>
+                                    <td class="time">白天、下午</td>
+                                    <td class="remark">15米CW</td>
+                                </tr>
+                                <tr class="band-even">
+                                    <td class="freq">21.253</td>
+                                    <td class="mode"><span class="mode-badge">USB</span></td>
+                                    <td class="time">早晨</td>
+                                    <td class="remark">周日早10:00-11:00台网点</td>
+                                </tr>
+                                <tr class="band-even">
+                                    <td class="freq">21.2-21.4</td>
+                                    <td class="mode"><span class="mode-badge">USB</span></td>
+                                    <td class="time">白天、下午</td>
+                                    <td class="remark">国外HAM</td>
+                                </tr>
+                                <tr class="band-odd">
+                                    <td class="band" rowspan="1">120米</td>
+                                    <td class="freq">2.500</td>
+                                    <td class="mode"><span class="mode-badge">AM</span></td>
+                                    <td class="time">15:30-09:00</td>
+                                    <td class="remark">BPM授时台</td>
+                                </tr>
+                                <tr class="band-even">
+                                    <td class="band" rowspan="1">60米</td>
+                                    <td class="freq">5.000</td>
+                                    <td class="mode"><span class="mode-badge">AM</span></td>
+                                    <td class="time">全天</td>
+                                    <td class="remark">BPM授时台</td>
+                                </tr>
+                                <tr class="band-odd">
+                                    <td class="band" rowspan="1">30米</td>
+                                    <td class="freq">10.000</td>
+                                    <td class="mode"><span class="mode-badge">AM</span></td>
+                                    <td class="time">全天</td>
+                                    <td class="remark">BPM授时台</td>
+                                </tr>
+                                <tr class="band-even">
+                                    <td class="band" rowspan="2">10米</td>
+                                    <td class="freq">29.600</td>
+                                    <td class="mode"><span class="mode-badge">FM</span></td>
+                                    <td class="time">白天、上午</td>
+                                    <td class="remark">/</td>
+                                </tr>
+                                <tr class="band-even">
+                                    <td class="freq">28.4-28.5</td>
+                                    <td class="mode"><span class="mode-badge">USB</span></td>
+                                    <td class="time">白天、上午</td>
+                                    <td class="remark">国外HAM</td>
+                                </tr>
+                                <tr class="band-odd">
+                                    <td class="band" rowspan="2">6米</td>
+                                    <td class="freq">50.110</td>
+                                    <td class="mode"><span class="mode-badge">USB</span></td>
+                                    <td class="time">全天</td>
+                                    <td class="remark">DX SSB，魔术波段 A证可上</td>
+                                </tr>
+                                <tr class="band-odd">
+                                    <td class="freq">50.130</td>
+                                    <td class="mode"><span class="mode-badge">USB</span></td>
+                                    <td class="time">全天</td>
+                                    <td class="remark">DXCC实体内SSB，魔术波段 A证可上</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="table-footer-note">
+                    <span>📌 数据由社区爱好者整理，仅供参考。使用前请遵守当地法律法规。</span>
+                </div>
+            </div>
+
+            <!-- ========== 第二部分：短波通信原理科普 ========== -->
+            <div class="science-card">
+                <h3>📻 短波通信原理科普</h3>
+                
+                <h4>1. 短波通信原理</h4>
+                <p>短波通信，也称高频通信，是波长为10〜100m，频率范围为3〜30MHz的一种无线电通信技术。与长、中波一样，短波可以靠表面波和天波传播。由于短波频率较高，地面吸收较强，用表面波传播时，衰减很快，在一般情况下，短波的表面波传播的距离只有几十公里，不适合进行远距离通信和广播。与表面波相反，频率增高，天波在电离层中的损耗却减小。因此可利用电离层对天波的一次或多次反射进行远距离无线电通信。短波利用天波反射实现远距离通信。天波发射信号由天线发出后射向电离层，经电离层反射回地面，又由地面反射回电离层，可以反射多次，不受地面阻碍物阻挡，因而传播距离很远(几百至上万千米)。</p>
+                <p>短波利用地波实现短距离通信。当地面障碍物与地波的波长相当时，容易阻挡无线电传播，导致短波最多只能沿地面传播几十千米。短波传播示意图如图所示：</p>
+                
+                <div class="img-container">
+                    <img src="/imgs/1-220Q610030Y60.png" alt="短波传播示意图 - 天波与地波路径">
+                    <figcaption>短波传播示意图（天波经电离层反射实现远距离通信）</figcaption>
+                </div>
+
+                <h4>2. 无线电波常见传播方式</h4>
+                <p>无线电波有四种主要传播方式，即地波、直射波、天波和散射波。</p>
+                <p><strong>地波（地表面波）：</strong>沿大地与空气的分界面传播的电波叫地表面波，简称地波。这是沿地球表面传播的无线电波。其传播途径主要取决于地面的电特性。地波在传播过程中，由于能量逐渐被大地吸收，很快减弱（波长越短，减弱越快），因而传播距离不远。但地波不受气候影响，可靠性高。超长波、长波、中波无线电信号，都是利用地波传播的。短波近距离通信也利用地波传播。</p>
+                <p><strong>直射波（空间波）：</strong>直射波又称为空间波，是由发射点从空间直线传播到接收点的无线电波。直射波传播距离一般限于视距范围。在传播过程中，它的强度衰减较慢，超短波和微波通信就是利用直射波传播的。在地面进行直射波通信，其接收点的场强由两路组成：一路由发射天线直达接收天线，另一路由地面反射后到达接收天线，如果天线高度和方向架设不当，容易造成相互干扰（如电视的重影）。限制直射波通信距离的因素主要是地球表面弧度和山地、楼房等障碍物，因此超短波和微波天线要求尽量高架。</p>
+                <p><strong>天波（电离层波）：</strong>天波是由天线向高空辐射的电磁波遇到大气电离层折射后返回地面的无线电波。电离层只对短波波段的电磁波产生反射作用，因此天波传播主要用于短波远距离通信。</p>
+                <p><strong>散射传播：</strong>散射传播是由天线辐射出去的电磁波投射到低空大气层或电离层中不均匀介质时产生散射，其中一部份到达接收点。散射传播距离远，但是效率低，不易操作，使用并不广泛。</p>
+
+                <h4>3. 与卫星通信、地面微波等相比，短波通信有着许多显著的优点：</h4>
+                <ol>
+                    <li><strong>低成本远距离通信：</strong>短波通信不需要建立中继站即可实现远距离通信，因而建设和维护费用低，建设周期短，且短波通信不用支付话费，运行成本低。</li>
+                    <li><strong>设备灵活机动：</strong>通信设备简单，体积小，容易隐蔽，可以根据使用要求固定设置，进行定点固定通信；也可以背负或装入车辆、舰船、飞行器中进行移动通信；便于改变工作频率以躲避敌人干扰和窃听，破坏后容易恢复。</li>
+                    <li><strong>组网快速：</strong>电路调度容易，临时组网方便、迅速，具有很大的使用灵活性。</li>
+                    <li><strong>抗毁能力强：</strong>对自然灾害或战争的抗毁能力强。短波是唯一不受网络枢纽和有源中继体制约束的远程通信手段，一旦发生战争或灾害，各种通信网络都可能受到破坏，卫星也可能受到攻击。无论哪种通信方式，其抗毁能力和自主通信能力与短波都无法相比。</li>
+                </ol>
+
+                <h4>4. 当然，短波通信也存在一些明显的缺点：</h4>
+                <ol>
+                    <li><strong>频段窄、容量小：</strong>可供使用的频段窄，通信容量小。按照国际规定，每个短波电台占用3.7kHz的频率宽度，而整个短波频段可利用的频率范围只有28.5MHz。为了避免相互间的干扰，全球只能容纳7700多个可通信道，通信空间十分拥挤，并且3kHz通信频带宽度在很大程度上限制了通信的容量和数据传输的速率。</li>
+                    <li><strong>信道不稳定（变参信道）：</strong>短波的天波信道是变参信道，信号传输稳定性差。短波无线电通信主要是依赖电离层进行远距离信号传输的，电离层作为信号反射媒质的弱点是参量的可变性很大，它的特点是路径损耗、延时散布、噪声和干扰都随昼夜、频率、地点不断变化。一方面，电离层的变化使信号产生衰落，衰落的幅度和频次不断变化；另一方面，天波信道存在着严重的多径效应，造成频率选择性衰落和多径延时。选择性衰落使信号失真，多径延时使接收信号在时间上扩散，成为短波链路传输的主要限制。</li>
+                    <li><strong>噪声干扰严重：</strong>大气和工业无线电噪声干扰严重。随着工业电气化的发展，短波频段工业电气辐射的无线电噪声干扰平均强度很高，加上大气无线电噪声和无线电台间的干扰，大气和工业无线电噪声主要集中在无线电频谱的低端，随着频率的升高，强度逐渐降低。</li>
+                </ol>
+                
+                <div style="margin-top: 1.5rem; border-left: 4px solid #0071e3; background: #f0f7ff; padding: 0.8rem 1.2rem; border-radius: 8px;">
+                    <span class="badge-light">📡 知识拓展</span>短波通信至今仍是航空、海事、军事、应急通信和业余无线电不可或缺的手段。
+                </div>
+            </div>
+
+            <!-- ========== 第三部分：无线电频谱频段划分 ========== -->
+            <div class="freq-card">
+                <h3>📡 无线电频谱频段划分 <span>频率划分表格</span></h3>
+
+                <p style="margin-bottom: 1.8rem; font-size: 1.1rem; background: #f0f7ff; padding: 1rem 1.5rem; border-radius: 60px; color: #0b3550;">
+                    🌍 无线电频谱就像一座无比宽阔的"电磁波城市"，土地有限，由政府机构严格划分管理。不同频段具有截然不同的物理特性，适合不同的"居民"（应用）落户。
+                </p>
+
+                <div class="table-wrapper">
+                    <div class="table-responsive">
+                        <table class="freq-table">
+                            <thead>
+                                <tr>
+                                    <th>频段名称 (俗称)</th>
+                                    <th>频率范围</th>
+                                    <th>波长范围</th>
+                                    <th>关键特性</th>
+                                    <th>日常应用举例</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="band-even">
+                                    <td class="band-name">低频 (LF)/长波</td>
+                                    <td class="freq-range">30 - 300 kHz</td>
+                                    <td class="wavelength-range">10 km - 1 km</td>
+                                    <td class="key-prop">穿透力强，传播距离极远，带宽窄</td>
+                                    <td class="apps">海上、水下和地下通信、无线授时（长波电台）</td>
+                                </tr>
+                                <tr class="band-odd">
+                                    <td class="band-name">中频 (MF)/中波</td>
+                                    <td class="freq-range">300 kHz - 3 MHz</td>
+                                    <td class="wavelength-range">1 km - 100 m</td>
+                                    <td class="key-prop">地波传播，夜间可通过电离层反射传得更远</td>
+                                    <td class="apps">中波广播，如AM调幅广播</td>
+                                </tr>
+                                <tr class="band-even">
+                                    <td class="band-name">高频 (HF)/短波</td>
+                                    <td class="freq-range">3 - 30 MHz</td>
+                                    <td class="wavelength-range">100 m - 10 m</td>
+                                    <td class="key-prop">依靠电离层反射，可实现超远距离通信</td>
+                                    <td class="apps">短波广播、业余无线电、远洋通信</td>
+                                </tr>
+                                <tr class="band-odd">
+                                    <td class="band-name">甚高频 (VHF)/米波</td>
+                                    <td class="freq-range">30 - 300 MHz</td>
+                                    <td class="wavelength-range">10 m - 1 m</td>
+                                    <td class="key-prop">视距传播，受地形影响较大</td>
+                                    <td class="apps">FM调频广播、陆地移动通信（如对讲机）、电视广播（老式）、航空通信和航海通信</td>
+                                </tr>
+                                <tr class="band-even">
+                                    <td class="band-name">特高频 (UHF)/分米波</td>
+                                    <td class="freq-range">300 MHz - 3 GHz</td>
+                                    <td class="wavelength-range">1 m - 10 cm</td>
+                                    <td class="key-prop">视距传播，穿透建筑物能力较强，带宽大</td>
+                                    <td class="apps">4G/5G移动通信、Wi-Fi (2.4GHz)、蓝牙、无线电视、GPS</td>
+                                </tr>
+                                <tr class="band-odd">
+                                    <td class="band-name">超高频 (SHF)/厘米波</td>
+                                    <td class="freq-range">3 - 30 GHz</td>
+                                    <td class="wavelength-range">10 cm - 1 cm</td>
+                                    <td class="key-prop">严格视距传播，高带宽，易被障碍物阻挡</td>
+                                    <td class="apps">Wi-Fi (5GHz)、卫星电视、微波中继、5G毫米波</td>
+                                </tr>
+                                <tr class="band-even">
+                                    <td class="band-name">极高频 (EHF)/毫米波</td>
+                                    <td class="freq-range">30 - 300 GHz</td>
+                                    <td class="wavelength-range">1 cm - 1 mm</td>
+                                    <td class="key-prop">带宽极大，但传播损耗大，极易被吸收</td>
+                                    <td class="apps">5G毫米波、汽车雷达、点对点高速无线链路</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="table-footer-note">
+                    <span>📌 数据基于ITU划分，各国具体分配可能略有差异，仅供参考。</span>
+                    <span>🔹 频率与波长：频率（Hz）和波长（米）通过光速紧密相连：<strong>波长 = 光速 / 频率</strong>（光速 ≈ 3×10⁸ m/s）。频率越高，波长越短，反之亦然。这一关系决定了无线电波的基本行为。</span>
+                </div>
+            </div>
+
+        </section>
+    </main>
+</body>
+</html>
