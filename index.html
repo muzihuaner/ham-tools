@@ -241,6 +241,93 @@
         .shadow-inner-xl {
             box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4), 0 4px 12px rgba(0, 0, 0, 0.2);
         }
+
+        /* 移动菜单样式 */
+        .mobile-menu {
+            position: fixed;
+            top: 56px;
+            left: 0;
+            right: 0;
+            background: white;
+            border-bottom: 1px solid #e5e5e7;
+            max-height: calc(100vh - 56px);
+            overflow-y: auto;
+            z-index: 40;
+            transform: translateY(-100%);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+        }
+
+        .mobile-menu.active {
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .mobile-menu-section {
+            padding: 16px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .mobile-menu-title {
+            padding: 12px 20px;
+            font-weight: 600;
+            font-size: 15px;
+            color: #000000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            user-select: none;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            transition: background-color 0.2s ease;
+        }
+
+        .mobile-menu-title:active {
+            background-color: #f5f5f7;
+        }
+
+        .mobile-menu-title span:first-child {
+            flex: 1;
+        }
+
+        .mobile-menu-title .toggle-icon {
+            font-size: 12px;
+            transition: transform 0.3s ease;
+            margin-left: 8px;
+        }
+
+        .mobile-menu-title.expanded .toggle-icon {
+            transform: rotate(180deg);
+        }
+
+        .mobile-menu-items {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .mobile-menu-items.active {
+            max-height: 500px;
+        }
+
+        .mobile-menu-item {
+            display: block;
+            padding: 12px 40px;
+            color: #000000;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .mobile-menu-item:active {
+            background-color: #f5f5f7;
+            color: #0071e3;
+        }
     </style>
 </head>
 
@@ -253,7 +340,7 @@
                 <!-- Logo -->
                 <div class="flex items-center space-x-2">
                     <div class="text-2xl font-bold text-gray-900">📡</div>
-                    <span class="text-sm font-semibold text-gray-900 hidden sm:block">HAM Tools</span>
+                    <span class="text-sm font-semibold text-gray-900  sm:block">HAM Tools</span>
                 </div>
 
                 <!-- 导航菜单 - 居中 -->
@@ -367,20 +454,126 @@
                 </div>
 
                 <!-- 右侧菜单 -->
-                <div class="flex items-center space-x-6">
-                    <a class="px-4 py-2 text-white bg-orange-500 hover:bg-orange-600 transition-all duration-200 font-medium rounded-full text-sm"
+                <div class="ml-auto flex items-center space-x-6">
+                    <a class="hidden md:flex px-4 py-2 text-white bg-orange-500 hover:bg-orange-600 transition-all duration-200 font-medium rounded-full text-sm"
                         href="https://pay.quickso.cn" target="_blank">
                         <span class="hidden md:inline">支持我们</span>💖
                     </a>
 
                     <!-- 移动菜单按钮 -->
-                    <button class="md:hidden">
+                    <button class="md:hidden" id="mobile-menu-btn" aria-label="菜单">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                            class="w-6 h-6">
+                            class="w-6 h-6 transition-transform duration-300">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M4 6h16M4 12h16M4 18h16" />
                         </svg>
                     </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 移动菜单 -->
+        <div class="mobile-menu" id="mobile-menu">
+            <!-- 学习考试 -->
+            <div class="mobile-menu-section">
+                <button class="mobile-menu-title" data-toggle="menu-0">
+                    <span>📝 学习考试</span>
+                    <span class="toggle-icon">▼</span>
+                </button>
+                <div class="mobile-menu-items" id="menu-0">
+                    <a href="https://www.cqid.cn/news/article" class="mobile-menu-item">考试动态</a>
+                    <a href="https://www.cqid.cn/" class="mobile-menu-item">模拟考试</a>
+                    <a href="http://82.157.138.16:8091/CRAC/crac/index.html" class="mobile-menu-item">验证系统</a>
+                    <a href="https://cw.quickso.cn/" class="mobile-menu-item">CW练习</a>
+                    <a href="https://hamstudy.org/" class="mobile-menu-item">FCCStudy</a>
+                </div>
+            </div>
+
+            <!-- 知识科普 -->
+            <div class="mobile-menu-section">
+                <button class="mobile-menu-title" data-toggle="menu-1">
+                    <span>💡 知识科普</span>
+                    <span class="toggle-icon">▼</span>
+                </button>
+                <div class="mobile-menu-items" id="menu-1">
+                    <a href="https://baike.baidu.com/item/%E4%B8%9A%E4%BD%99%E6%97%A0%E7%BA%BF%E7%94%B5" class="mobile-menu-item">百科</a>
+                    <a href="https://docs.hamcq.cn/" class="mobile-menu-item">HamCQ手册</a>
+                    <a href="jsf.html" class="mobile-menu-item">字母解释法</a>
+                </div>
+            </div>
+
+            <!-- 工具页面 -->
+            <div class="mobile-menu-section">
+                <a href="sun.html" class="mobile-menu-title" style="cursor: pointer; text-decoration: none; color: inherit;">
+                    <span>☀️ 传播预测</span>
+                    <span style="margin-left: 8px;"></span>
+                </a>
+                <a href="dbpl.html" class="mobile-menu-title" style="cursor: pointer; text-decoration: none; color: inherit;">
+                    <span>🚩 短波常用频率</span>
+                    <span style="margin-left: 8px;"></span>
+                </a>
+            </div>
+
+            <!-- 中继 -->
+            <div class="mobile-menu-section">
+                <button class="mobile-menu-title" data-toggle="menu-2">
+                    <span>🗺️ 中继</span>
+                    <span class="toggle-icon">▼</span>
+                </button>
+                <div class="mobile-menu-items" id="menu-2">
+                    <a href="https://forum.hamcq.cn/relay" class="mobile-menu-item">中继查询</a>
+                    <a href="https://repeater.quickso.cn/" class="mobile-menu-item">中继地图</a>
+                </div>
+            </div>
+
+            <!-- 卫星追踪 -->
+            <div class="mobile-menu-section">
+                <button class="mobile-menu-title" data-toggle="menu-3">
+                    <span>🛰️ 卫星追踪</span>
+                    <span class="toggle-icon">▼</span>
+                </button>
+                <div class="mobile-menu-items" id="menu-3">
+                    <a href="http://amsat.org.ar/pass.htm" class="mobile-menu-item">卫星过境查询</a>
+                    <a href="https://www.heavens-above.com/AmateurSats.aspx?lat=0&lng=0&loc=Unspecified&alt=0&tz=UCT" class="mobile-menu-item">轨道信息</a>
+                </div>
+            </div>
+
+            <!-- 查询工具 -->
+            <div class="mobile-menu-section">
+                <button class="mobile-menu-title" data-toggle="menu-4">
+                    <span>📍 查询工具</span>
+                    <span class="toggle-icon">▼</span>
+                </button>
+                <div class="mobile-menu-items" id="menu-4">
+                    <a href="https://qth.quickso.cn/" class="mobile-menu-item">梅登黑德网格定位</a>
+                    <a href="https://aprs.tv/" class="mobile-menu-item">APRS地图</a>
+                    <a href="https://www.receiverbook.de/map" class="mobile-menu-item">SDR地图</a>
+                    <a href="http://www.short-wave.info/" class="mobile-menu-item">短波广播查询</a>
+                    <a href="https://www.qrz.com/" class="mobile-menu-item">QRZ呼号查询</a>
+                </div>
+            </div>
+
+            <!-- 解码工具 -->
+            <div class="mobile-menu-section">
+                <button class="mobile-menu-title" data-toggle="menu-5">
+                    <span>📡 解码工具</span>
+                    <span class="toggle-icon">▼</span>
+                </button>
+                <div class="mobile-menu-items" id="menu-5">
+                    <a href="https://noaa.quickso.cn/" class="mobile-menu-item">NOAA卫星解码</a>
+                    <a href="https://muzihuaner.github.io/Morse-Code-Translation/" class="mobile-menu-item">CW翻译</a>
+                </div>
+            </div>
+
+            <!-- 在线工具 -->
+            <div class="mobile-menu-section">
+                <button class="mobile-menu-title" data-toggle="menu-6">
+                    <span>📻 在线工具</span>
+                    <span class="toggle-icon">▼</span>
+                </button>
+                <div class="mobile-menu-items" id="menu-6">
+                    <a href="https://radio.quickso.cn/" class="mobile-menu-item">SDR网页客户端</a>
+                    <a href="https://k5.vicicode.cn/" class="mobile-menu-item">K5Web工具</a>
                 </div>
             </div>
         </div>
@@ -691,12 +884,40 @@
 
             <!-- 页脚底部 -->
             <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-sm">
-                <p class="text-gray-400">© 2026 快点业余无线电工具箱. All rights reserved.</p>
+                <p class="text-gray-400">© <span id="current-year">2026</span> 快点业余无线电工具箱. All rights reserved.</p>
             </div>
         </div>
     </footer>
 
     <script>
+        // 移动菜单切换
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        if (mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                mobileMenu.classList.toggle('active');
+            });
+        }
+
+        // 点击菜单中的链接后关闭菜单
+        document.querySelectorAll('#mobile-menu a').forEach(link => {
+            link.addEventListener('click', function() {
+                // 延迟关闭菜单，允许链接点击生效
+                setTimeout(() => {
+                    mobileMenu.classList.remove('active');
+                }, 100);
+            });
+        });
+
+        // 点击页面其他地方关闭菜单
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('nav')) {
+                mobileMenu.classList.remove('active');
+            }
+        });
+
         // 导航栏下拉菜单点击动画和交互
         document.querySelectorAll('.nav-dropdown').forEach(dropdown => {
             const link = dropdown.querySelector('.nav-link');
@@ -753,6 +974,22 @@
             });
         });
 
+        // 菜单标题点击 - 展开/折叠
+        document.querySelectorAll('.mobile-menu-title[data-toggle]').forEach(title => {
+            title.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const toggleId = title.getAttribute('data-toggle');
+                const itemsDiv = document.getElementById(toggleId);
+                
+                if (itemsDiv) {
+                    title.classList.toggle('expanded');
+                    itemsDiv.classList.toggle('active');
+                }
+            });
+        });
+
         // 实时更新世界时间
         function updateWorldTime() {
             const now = new Date();
@@ -770,6 +1007,9 @@
             const bjtSeconds = String(bjtDate.getUTCSeconds()).padStart(2, '0');
             document.getElementById('bjt-time').textContent = `${bjtHours}:${bjtMinutes}:${bjtSeconds}`;
         }
+
+        // 自动获取当前年份
+        document.getElementById('current-year').textContent = new Date().getFullYear();
 
         // 初始化时间显示并每秒更新
         updateWorldTime();
